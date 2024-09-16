@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { TableService } from '../../services/table.service';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
