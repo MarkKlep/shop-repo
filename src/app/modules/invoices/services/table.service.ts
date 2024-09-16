@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { EditableCell } from 'src/app/core/models/invoice/table/editable-cell.interface';
@@ -21,13 +21,13 @@ export class TableService {
   }
 
   handleAddInvoice() {
-    console.log('handleAddInvoice');
-
+    const now = new Date();
+    const formattedDate = now.toISOString().slice(0, 16);
     const newInvoice = {
         id: Math.random().toString(36).substr(2, 9),
         number: '',
         name: '',
-        date: '',
+        date: formattedDate,
         status: InvoiceStatus.CREATED,
         image: ''
     };
