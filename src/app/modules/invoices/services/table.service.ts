@@ -123,4 +123,18 @@ export class TableService {
 
     this.invoices.next(updatedInvoices);
   }
+
+  sortBy(column: string, option: 'asc' | 'desc') {
+    const prevInvoices = this.invoices.value;
+    const updatedInvoices = prevInvoices.sort((a, b) => {
+      if(option === 'asc') {
+        return (a as any)[column] > (b as any)[column] ? 1 : -1;
+      } else {
+        return (a as any)[column] < (b as any)[column] ? 1 : -1;
+      }
+    });
+
+    this.invoices.next(updatedInvoices);
+    this.saveInvoices(updatedInvoices);
+  }
 }

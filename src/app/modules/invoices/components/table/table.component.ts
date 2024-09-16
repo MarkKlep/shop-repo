@@ -72,4 +72,8 @@ export class TableComponent {
   handleSelectValue(id: string, col: string, event: Event) {
     this.tableService.handleSelectValue(id, col, event);
   }
+
+  sortBy(column: string, option: 'asc' | 'desc') {
+    this.tableService.sortBy(column, option);
+  }
 }

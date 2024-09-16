@@ -33,3 +33,23 @@ td.editable {
     outline: 2px solid #007bff;
     z-index: 1;
 }
+
+.table-head {
+    display: flex;
+    justify-content: space-between;
+
+    .table-head-name {
+        flex-grow: 1;
+    }
+
+    .table-head-sort-btns {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+
+        .arrow {
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    }
+}
