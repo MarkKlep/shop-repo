@@ -21,14 +21,16 @@ export class TableService {
   }
 
   handleAddInvoice() {
+    console.log('handleAddInvoice');
+
     const newInvoice = {
-      id: Math.random().toString(36).substr(2, 9),
-      number: '',
-      name: '',
-      date: '',
-      status: InvoiceStatus.CREATED,
-      image: ''
-    }
+        id: Math.random().toString(36).substr(2, 9),
+        number: '',
+        name: '',
+        date: '',
+        status: InvoiceStatus.CREATED,
+        image: ''
+    };
 
     const prevInvoices = this.invoices.value;
     const updatedInvoices: Invoice[] = [...prevInvoices, newInvoice];

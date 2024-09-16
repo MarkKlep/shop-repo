@@ -20,17 +20,24 @@
                     [attr.data-col]="col"
                     [ngClass]="{ 'editable': isEditableCell(invoice, col) }"
                 >
-                    <p *ngIf="(!isEditableCell(invoice, col) && col !== 'image' && col !== 'status')">
+                    <p *ngIf="(!isEditableCell(invoice, col) && col !== 'image' && col !== 'status' && col !== 'date')">
                         {{ getValue(invoice, col) }}
                     </p>
                     <input
-                        *ngIf="isEditableCell(invoice, col) && col !== 'status'"
+                        *ngIf="isEditableCell(invoice, col) && col !== 'status' && col !== 'date'"
                         #inputField
                         type="text" 
                         (keyup.enter)="handleSaveCell(invoice, col, $event)"
                         (blur)="handleSaveCell(invoice, col, $event)"
                         [value]="getValue(invoice, col)"
                         (keyup)="handleInputValue(invoice.id, col, $event)"
+                    >
+                    <input
+                        *ngIf="col === 'date'"
+                        type="datetime-local"
+                        (change)="handleSaveCell(invoice, col, $event)"
+                        [value]="invoice.date"
+                        (blur)="handleSaveCell(invoice, col, $event)"
                     >
                     <select
                         *ngIf="col === 'status'"
