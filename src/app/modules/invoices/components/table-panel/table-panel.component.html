@@ -1,0 +1,25 @@
+<div class="container mt-5">
+    <div class="table-actions mb-5">
+        <button 
+            class="btn btn-primary" 
+            (click)="handleAddInvoice()"
+        >
+            Add Invoice
+        </button>
+
+        <button
+            class="btn btn-danger"
+            (click)="handleRemoveRowMode()"
+        >
+            {{ !isCursorRemovingRow ? 'Remove Invoice' : 'Cancel' }}
+        </button>
+        <div class="form-group">
+            <label for="pageSizeSelect">Page Size:</label>
+            <select id="pageSizeSelect" class="form-control">
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
+            </select>
+        </div>
+    </div>
+</div>

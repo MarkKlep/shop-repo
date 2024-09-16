@@ -1,0 +1,62 @@
+<div class="container mt-5">
+
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th *ngFor="let column of columnNames">
+                    {{ column | titlecase }}
+                </th>
+            </tr>
+        </thead>
+    
+        <tbody>
+            <tr 
+                *ngFor="let invoice of tableService.invoices | async"
+                (dblclick)="handleEditCellMode(invoice, $event)"
+                (click)="handleRemoveRow(invoice.id)"
+            >
+                <td 
+                    *ngFor="let col of columnNames"
+                    [attr.data-col]="col"
+                    [ngClass]="{ 'editable': isEditableCell(invoice, col) }"
+                >
+                    <p *ngIf="(!isEditableCell(invoice, col) && col !== 'image' && col !== 'status')">
+                        {{ getValue(invoice, col) }}
+                    </p>
+                    <input
+                        *ngIf="isEditableCell(invoice, col) && col !== 'status'"
+                        #inputField
+                        type="text" 
+                        (keyup.enter)="handleSaveCell(invoice, col, $event)"
+                        (blur)="handleSaveCell(invoice, col, $event)"
+                        [value]="getValue(invoice, col)"
+                        (keyup)="handleInputValue(invoice.id, col, $event)"
+                    >
+                    <select
+                        *ngIf="col === 'status'"
+                        (change)="handleSaveCell(invoice, col, $event)"
+                    >
+                        <option 
+                            *ngFor="let status of statuses"
+                            [selected]="status.value === invoice.status"
+                        >
+                            {{ status.label }}
+                        </option>
+                    </select>
+                    <img 
+                        *ngIf="(!isEditableCell(invoice, col) && col === 'image')"
+                        [src]="invoice.image" 
+                        [alt]="invoice.name"
+                    >
+                </td>
+            </tr>
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <td [attr.colspan]="columnNames.length">
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

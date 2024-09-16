@@ -1,0 +1,41 @@
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Login</h1>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mx-auto" style="max-width: 400px;">
+        <div class="form-floating mb-3">
+            <input 
+                id="inp-name"
+                class="form-control form-control-sm"
+                type="text"
+                [formControl]="loginForm.controls.name"
+                placeholder="Name"
+            >
+            <label class="form-label" for="inp-name">Name</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input 
+                id="inp-password"
+                class="form-control form-control-sm"
+                type="password"
+                [formControl]="loginForm.controls.password"
+                placeholder="Password"
+            >
+            <label class="form-label" for="inp-password">Password</label>
+        </div>
+        
+        <div class="mx-auto">
+            <button class="btn btn-primary" type="submit">Login</button>
+        </div>
+    </form>
+
+    <div class="text-center mt-5">
+        <div>
+            <p class="success" *ngIf="formResponse">Successful log</p>
+            <p class="error" *ngIf="!formResponse && formResponse !== undefined">Incorrect data</p>
+        </div>
+    
+        <div>
+            <p class="mb-0">Don't have an account? <a routerLink="/register">Sign up</a></p>
+        </div>
+    </div>    
+</div>

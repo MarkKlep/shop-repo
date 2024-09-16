@@ -1,0 +1,63 @@
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Registrate</h1>
+    <form [formGroup]="regForm" (ngSubmit)="onSubmit()" class="mx-auto" style="max-width: 400px;">
+        <div class="form-floating mb-3">
+            <input 
+                id="inp-name"
+                class="form-control form-control-sm"
+                type="text"
+                [formControl]="regForm.controls.name"
+                placeholder="Name"
+            >
+            <label class="form-label" for="inp-name">Name</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input 
+                id="inp-email"
+                class="form-control form-control-sm"
+                type="text"
+                [formControl]="regForm.controls.email"
+                placeholder="Email"
+            >
+            <label class="form-label" for="inp-email">Email</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input 
+                id="inp-password"
+                class="form-control form-control-sm"
+                type="password"
+                [formControl]="regForm.controls.password"
+                placeholder="Password"
+            >
+            <label class="form-label" for="inp-password">Password</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input 
+                id="inp-confirmPassword"
+                class="form-control form-control-sm"
+                type="password"
+                [formControl]="regForm.controls.confirmPassword"
+                placeholder="Confirm password"
+            >
+            <label class="form-label" for="inp-confirmPassword">Confirm password</label>
+        </div>
+
+        <div class="">
+            <button class="btn btn-primary" type="submit">Registrate</button>
+        </div>
+    </form>
+
+    <div class="text-center mt-3">
+        <div>
+            <p class="success" *ngIf="formResponse">Successfull register</p>
+            <p class="error" *ngIf="!formResponse && formResponse !== undefined">User already exists</p>
+        </div>
+    
+        <div>
+            <p>Go <a routerLink="/">back</a></p>
+        </div>
+    </div>
+</div>
