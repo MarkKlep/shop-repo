@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
 
 export enum SignFilterEnum {
@@ -23,8 +23,5 @@ export class FilterService {
   nameFilter = new BehaviorSubject<string>('');
 
   statusFilter = new BehaviorSubject<InvoiceStatus | 'All'>('All');
-
-  constructor() { }
-
 
 }

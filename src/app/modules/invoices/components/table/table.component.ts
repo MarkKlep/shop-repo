@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
 import { TableService } from '../../services/table.service';
 import { FilterService } from '../../services/filter.service';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
@@ -88,7 +88,6 @@ export class TableComponent implements OnInit, OnDestroy {
         return this.items;
       })
     );
-    
   }
 
   @ViewChild('inputField') inputField!: ElementRef;
@@ -130,7 +129,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.paginationSubscription.unsubscribe();
   }
 
-  loadPageData(): void {
+  loadPageData() {
     this.visibleInvoices$.subscribe(invoices => {
       const pageSize = this.paginationService.getPageSize();
       const start = (this.currentPage - 1) * pageSize;

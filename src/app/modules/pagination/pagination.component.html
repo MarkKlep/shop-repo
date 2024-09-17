@@ -1,3 +1,19 @@
-<div class="pagination-container">
-    <p>pagination works!</p>
+<div class="pagination-container pagination mt-3 mb-5">
+    <button 
+        class="btn btn-secondary"
+        (click)="setPage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+    >
+        Previous
+    </button>
+    <span class="mx-2">
+        Page {{ currentPage }} of {{ totalPages }}
+    </span>
+    <button 
+        class="btn btn-secondary"
+        (click)="setPage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+    >
+        Next
+    </button>
 </div>

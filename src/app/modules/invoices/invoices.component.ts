@@ -9,6 +9,8 @@ import { TableService } from './services/table.service';
 export class InvoicesComponent { 
   constructor(private tableService: TableService) {}
 
+  pageSize = 5;
+
   @HostListener('window:mousemove')
   onMouseMove() {
     if (this.tableService.isCursorRemovingRow) {
@@ -16,5 +18,9 @@ export class InvoicesComponent {
     } else {
       document.body.style.cursor = 'default';
     }
+  }
+
+  handlePageSize(pageSize: number) {
+    this.pageSize = pageSize;
   }
 }

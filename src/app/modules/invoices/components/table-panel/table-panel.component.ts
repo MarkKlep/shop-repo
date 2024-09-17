@@ -20,4 +20,10 @@ export class TablePanelComponent {
   get isCursorRemovingRow() {
     return this.tableService.isCursorRemovingRow;
   }
+
+  handlePageSize(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const pageSize = +target.value;
+    console.log(pageSize);
+  }
 }
