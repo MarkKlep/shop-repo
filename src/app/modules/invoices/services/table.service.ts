@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, delay, of, tap } from 'rxjs';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { EditableCell } from 'src/app/core/models/invoice/table/editable-cell.interface';
@@ -20,11 +20,14 @@ export class TableService {
       image: btoa(invoice.image),
     }));
 
-    this.fetchData.next(true);
-    setTimeout(() => {
-      localStorage.setItem('invoices', JSON.stringify(storedInvoices));
-      this.fetchData.next(false);
-    }, 1000);
+    of(storedInvoices).pipe(
+      tap(() => {
+        this.fetchData.next(true);
+        localStorage.setItem('invoices', JSON.stringify(storedInvoices));
+      }),
+      delay(1000),
+      tap(() => this.fetchData.next(false))
+    ).subscribe();
   }
 
   handleAddInvoice() {
