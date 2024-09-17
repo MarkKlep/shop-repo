@@ -1,7 +1,72 @@
-<div class="container mt-5">
+<ng-content *ngIf="fetchData$ | async"></ng-content>
 
+<div class="container mt-5">
     <table class="table table-bordered">
         <thead class="table-light">
+            <tr>
+                <th *ngFor="let column of columnNames">
+                    <div
+                        *ngIf="column === 'number'"
+                    >
+                        <input
+                            type="text"
+                            (keyup)="handleInputNumberFilter($event)"
+                            placeholder="Number..."
+                            class="form-control"
+                        >
+                        <select
+                            (change)="handleNumberFilterSign($event)"
+                            class="form-select"
+                        >
+                            <option value="all">all</option>
+                            <option value="equal">=</option>
+                            <option value="more">></option>
+                            <option value="less"><</option>
+                        </select>
+                    </div>
+                    <div
+                        *ngIf="column === 'date'"
+                    >
+                        <input
+                            type="datetime-local"
+                            (change)="handleDateRange($event)"
+                            class="form-control"
+                        >
+                        <select
+                            (change)="handleDateFilterSign($event)"
+                            class="form-select"
+                        >
+                            <option value="all">all</option>
+                            <option value="equal">=</option>
+                            <option value="more">></option>
+                            <option value="less"><</option>
+                        </select>
+                    </div>
+                    <div
+                        *ngIf="column === 'status'"
+                    >
+                        <select
+                            (change)="handleStatusFilter($event)"
+                            class="form-select"
+                        >
+                            <option value="All">all</option>
+                            <option value="Created">Created</option>
+                            <option value="Paid">Paid</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div
+                        *ngIf="column === 'name'"
+                    >
+                        <input
+                            type="text"
+                            (keyup)="handleInputNameFilter($event)"
+                            placeholder="Name..."
+                            class="form-control"
+                        >
+                    </div>
+                </th>
+            </tr>
             <tr>
                 <th *ngFor="let column of columnNames">
                     <div class="table-head">
@@ -23,7 +88,7 @@
     
         <tbody>
             <tr 
-                *ngFor="let invoice of tableService.invoices | async"
+                *ngFor="let invoice of visibleInvoices$ | async"
                 (dblclick)="handleEditCellMode(invoice, $event)"
                 (click)="handleRemoveRow(invoice.id)"
             >

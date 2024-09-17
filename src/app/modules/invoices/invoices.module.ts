@@ -7,6 +7,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { TableComponent } from './components/table/table.component';
 import { TablePanelComponent } from './components/table-panel/table-panel.component';
 import { PaginationModule } from '../pagination/pagination.module';
+import { LoaderComponent } from './components/loader/loader.component';
 
 
 
@@ -14,7 +15,8 @@ import { PaginationModule } from '../pagination/pagination.module';
   declarations: [
     InvoicesComponent,
     TableComponent,
-    TablePanelComponent
+    TablePanelComponent,
+    LoaderComponent
   ],
   imports: [
     CommonModule,

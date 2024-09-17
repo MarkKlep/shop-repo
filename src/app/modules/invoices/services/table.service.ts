@@ -12,12 +12,19 @@ export class TableService {
   editableCell = new BehaviorSubject<EditableCell | null>(null);
   isCursorRemovingRow = false;
 
+  fetchData = new BehaviorSubject<boolean>(false);
+
   saveInvoices(invoices: Invoice[]) {
     const storedInvoices: Invoice[] = invoices.map(invoice => ({
       ...invoice,
       image: btoa(invoice.image),
     }));
-    localStorage.setItem('invoices', JSON.stringify(storedInvoices));
+
+    this.fetchData.next(true);
+    setTimeout(() => {
+      localStorage.setItem('invoices', JSON.stringify(storedInvoices));
+      this.fetchData.next(false);
+    }, 1000);
   }
 
   handleAddInvoice() {

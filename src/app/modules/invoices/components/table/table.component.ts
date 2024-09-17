@@ -1,7 +1,10 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { TableService } from '../../services/table.service';
+import { FilterService } from '../../services/filter.service';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
+import { combineLatest, map, Observable } from 'rxjs';
+import { SignFilterEnum } from '../../services/filter.service';
 
 @Component({
   selector: 'app-table',
@@ -17,7 +20,69 @@ export class TableComponent {
     { value: InvoiceStatus.CANCELLED, label: 'Cancelled' }
   ];
 
-  constructor(public tableService: TableService) { }
+  visibleInvoices$: Observable<Invoice[]> = this.tableService.invoices;
+
+  fetchData$ = this.tableService.fetchData;
+
+  constructor(private tableService: TableService, private filterService: FilterService) {
+    this.visibleInvoices$ = combineLatest([
+      this.tableService.invoices,
+      this.filterService.dateFilter,
+      this.filterService.signFilter,
+      this.filterService.statusFilter,
+      this.filterService.numberFilter,
+      this.filterService.numberFilterSign,
+      this.filterService.nameFilter,
+    ]).pipe(
+      map(([invoices, dataFilter, signfilter]) => {
+        if(!dataFilter) return invoices;
+
+        if(signfilter === SignFilterEnum.ALL) return invoices;
+        else if(signfilter === SignFilterEnum.MORE) {
+          return invoices.filter(invoice => invoice.date > dataFilter);
+        }
+        else if(signfilter === SignFilterEnum.LESS) {
+          return invoices.filter(invoice => invoice.date < dataFilter);
+        }
+        else if(signfilter === SignFilterEnum.EQUAL) {
+          return invoices.filter(invoice => invoice.date === dataFilter);
+        }
+
+        return [];
+      }),
+      map(invoices => {
+        const statusFilter = this.filterService.statusFilter.value;
+        if(!statusFilter || statusFilter === 'All') return invoices;
+
+        return invoices.filter(invoice => invoice.status === statusFilter);
+      }),
+      map(invoices => {
+        const numberFilter = this.filterService.numberFilter.value;
+        if(!numberFilter) return invoices;
+
+        const signFilter = this.filterService.numberFilterSign.value;
+        if(signFilter === SignFilterEnum.ALL) return invoices;
+
+        if(signFilter === SignFilterEnum.MORE) {
+          return invoices.filter(invoice => +invoice.number > numberFilter);
+        }
+        else if(signFilter === SignFilterEnum.LESS) {
+          return invoices.filter(invoice => +invoice.number < numberFilter);
+        }
+        else if(signFilter === SignFilterEnum.EQUAL) {
+          return invoices.filter(invoice => +invoice.number === numberFilter);
+        }
+
+        return [];
+      }),
+      map(invoices => {
+        const nameFilter = this.filterService.nameFilter.value;
+        if(!nameFilter) return invoices;
+
+        return invoices.filter(invoice => invoice.name.includes(nameFilter));
+      }),
+    )
+  }
 
   @ViewChild('inputField') inputField!: ElementRef;
 
@@ -75,5 +140,50 @@ export class TableComponent {
 
   sortBy(column: string, option: 'asc' | 'desc') {
     this.tableService.sortBy(column, option);
+  }
+
+  handleDateRange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    this.filterService.dateFilter.next(value);
+  }
+
+  handleDateFilterSign(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const value = target.value as any;
+
+    this.filterService.signFilter.next(value);
+  }
+
+  handleStatusFilter(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const value = target.value as InvoiceStatus | 'All';
+
+    this.filterService.statusFilter.next(value);
+  }
+
+  handleInputNumberFilter(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    const parsedValue = +value;
+    if(isNaN(parsedValue)) return;
+    console.log(parsedValue);
+    this.filterService.numberFilter.next(parsedValue);
+  }
+
+  handleNumberFilterSign(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const value = target.value as SignFilterEnum;
+
+    this.filterService.numberFilterSign.next(value);
+  }
+
+  handleInputNameFilter(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    this.filterService.nameFilter.next(value);
   }
 }
