@@ -1,17 +1,18 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { TableService } from '../../services/table.service';
 import { FilterService } from '../../services/filter.service';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, Subscription } from 'rxjs';
 import { SignFilterEnum } from '../../services/filter.service';
+import { PaginationService } from '../../services/pagination.service';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent {
+export class TableComponent implements OnInit, OnDestroy {
   readonly columnNames = ['number', 'name', 'date', 'status', 'image'];
 
   readonly statuses = [
@@ -21,10 +22,18 @@ export class TableComponent {
   ];
 
   visibleInvoices$: Observable<Invoice[]> = this.tableService.invoices;
-
   fetchData$ = this.tableService.fetchData;
 
-  constructor(private tableService: TableService, private filterService: FilterService) {
+  items: Invoice[] = [];
+  totalPages: number = 0;
+  currentPage: number = 1;
+  private paginationSubscription = new Subscription();
+
+  constructor(
+    private tableService: TableService,
+    private filterService: FilterService,
+    private paginationService: PaginationService
+  ) {
     this.visibleInvoices$ = combineLatest([
       this.tableService.invoices,
       this.filterService.dateFilter,
@@ -33,76 +42,106 @@ export class TableComponent {
       this.filterService.numberFilter,
       this.filterService.numberFilterSign,
       this.filterService.nameFilter,
+      this.paginationService.currentPage$
     ]).pipe(
-      map(([invoices, dataFilter, signfilter]) => {
-        if(!dataFilter) return invoices;
-
-        if(signfilter === SignFilterEnum.ALL) return invoices;
-        else if(signfilter === SignFilterEnum.MORE) {
-          return invoices.filter(invoice => invoice.date > dataFilter);
+      map(([invoices, dataFilter, signfilter, statusFilter, numberFilter, numberFilterSign, nameFilter, page]) => {
+        let filteredInvoices = invoices;
+    
+        if (dataFilter) {
+          if (signfilter === SignFilterEnum.ALL) {
+            filteredInvoices = filteredInvoices;
+          } else if (signfilter === SignFilterEnum.MORE) {
+            filteredInvoices = filteredInvoices.filter(invoice => invoice.date > dataFilter);
+          } else if (signfilter === SignFilterEnum.LESS) {
+            filteredInvoices = filteredInvoices.filter(invoice => invoice.date < dataFilter);
+          } else if (signfilter === SignFilterEnum.EQUAL) {
+            filteredInvoices = filteredInvoices.filter(invoice => invoice.date === dataFilter);
+          }
         }
-        else if(signfilter === SignFilterEnum.LESS) {
-          return invoices.filter(invoice => invoice.date < dataFilter);
+    
+        if (statusFilter && statusFilter !== 'All') {
+          filteredInvoices = filteredInvoices.filter(invoice => invoice.status === statusFilter);
         }
-        else if(signfilter === SignFilterEnum.EQUAL) {
-          return invoices.filter(invoice => invoice.date === dataFilter);
+    
+        if (numberFilter) {
+          if (numberFilterSign === SignFilterEnum.ALL) {
+            filteredInvoices = filteredInvoices;
+          } else if (numberFilterSign === SignFilterEnum.MORE) {
+            filteredInvoices = filteredInvoices.filter(invoice => +invoice.number > numberFilter);
+          } else if (numberFilterSign === SignFilterEnum.LESS) {
+            filteredInvoices = filteredInvoices.filter(invoice => +invoice.number < numberFilter);
+          } else if (numberFilterSign === SignFilterEnum.EQUAL) {
+            filteredInvoices = filteredInvoices.filter(invoice => +invoice.number === numberFilter);
+          }
         }
-
-        return [];
-      }),
-      map(invoices => {
-        const statusFilter = this.filterService.statusFilter.value;
-        if(!statusFilter || statusFilter === 'All') return invoices;
-
-        return invoices.filter(invoice => invoice.status === statusFilter);
-      }),
-      map(invoices => {
-        const numberFilter = this.filterService.numberFilter.value;
-        if(!numberFilter) return invoices;
-
-        const signFilter = this.filterService.numberFilterSign.value;
-        if(signFilter === SignFilterEnum.ALL) return invoices;
-
-        if(signFilter === SignFilterEnum.MORE) {
-          return invoices.filter(invoice => +invoice.number > numberFilter);
+    
+        if (nameFilter) {
+          filteredInvoices = filteredInvoices.filter(invoice => invoice.name.includes(nameFilter));
         }
-        else if(signFilter === SignFilterEnum.LESS) {
-          return invoices.filter(invoice => +invoice.number < numberFilter);
-        }
-        else if(signFilter === SignFilterEnum.EQUAL) {
-          return invoices.filter(invoice => +invoice.number === numberFilter);
-        }
-
-        return [];
-      }),
-      map(invoices => {
-        const nameFilter = this.filterService.nameFilter.value;
-        if(!nameFilter) return invoices;
-
-        return invoices.filter(invoice => invoice.name.includes(nameFilter));
-      }),
-    )
+    
+        const pageSize = this.paginationService.getPageSize();
+        const start = (page - 1) * pageSize;
+        const end = start + pageSize;
+        this.totalPages = Math.ceil(filteredInvoices.length / pageSize);
+        this.items = filteredInvoices.slice(start, end);
+    
+        return this.items;
+      })
+    );
+    
   }
 
   @ViewChild('inputField') inputField!: ElementRef;
 
   ngAfterViewChecked() {
     if (this.inputField) {
-        this.inputField.nativeElement.focus();
+      this.inputField.nativeElement.focus();
     }
   }
 
   ngOnInit() {
+    this.paginationSubscription.add(
+      this.paginationService.currentPage$.subscribe(page => {
+        this.currentPage = page;
+        this.loadPageData();
+      })
+    );
+
+    this.visibleInvoices$.subscribe(invoices => {
+      this.paginationService.setTotalItems(invoices.length);
+      this.totalPages = this.paginationService.getTotalPages();
+      this.loadPageData();
+    });
+
     const savedInvoices = localStorage.getItem('invoices');
 
-    if(savedInvoices) {
+    if (savedInvoices) {
       const parsedData = JSON.parse(savedInvoices);
       const invoices = parsedData.map((invoice: Invoice) => ({
         ...invoice,
         image: atob(invoice.image),
       }));
-      
+
       this.tableService.invoices.next(invoices);
+    }
+  }
+
+  ngOnDestroy() {
+    this.paginationSubscription.unsubscribe();
+  }
+
+  loadPageData(): void {
+    this.visibleInvoices$.subscribe(invoices => {
+      const pageSize = this.paginationService.getPageSize();
+      const start = (this.currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      this.items = invoices.slice(start, end);
+    });
+  }
+
+  setPage(page: number): void {
+    if (page > 0 && page <= this.totalPages) {
+      this.paginationService.setPage(page);
     }
   }
 
@@ -168,7 +207,7 @@ export class TableComponent {
     const value = target.value;
 
     const parsedValue = +value;
-    if(isNaN(parsedValue)) return;
+    if (isNaN(parsedValue)) return;
     console.log(parsedValue);
     this.filterService.numberFilter.next(parsedValue);
   }
