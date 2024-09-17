@@ -42,7 +42,8 @@ export class TableComponent implements OnInit, OnDestroy {
       this.filterService.numberFilter,
       this.filterService.numberFilterSign,
       this.filterService.nameFilter,
-      this.paginationService.currentPage$
+      this.paginationService.currentPage$,
+      this.paginationService.pageSize$
     ]).pipe(
       map(([invoices, dataFilter, signfilter, statusFilter, numberFilter, numberFilterSign, nameFilter, page]) => {
         let filteredInvoices = invoices;

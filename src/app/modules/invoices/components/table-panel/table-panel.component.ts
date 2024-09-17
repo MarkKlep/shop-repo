@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TableService } from '../../services/table.service';
+import { PaginationService } from '../../services/pagination.service';
 
 @Component({
   selector: 'app-table-panel',
@@ -7,7 +8,7 @@ import { TableService } from '../../services/table.service';
   styleUrls: ['./table-panel.component.scss']
 })
 export class TablePanelComponent {
-  constructor(private tableService: TableService) { }
+  constructor(private tableService: TableService, private paginationService: PaginationService) { }
 
   handleAddInvoice() {
     this.tableService.handleAddInvoice();
@@ -24,6 +25,7 @@ export class TablePanelComponent {
   handlePageSize(event: Event) {
     const target = event.target as HTMLSelectElement;
     const pageSize = +target.value;
-    console.log(pageSize);
+
+    this.paginationService.setPageSize(pageSize);
   }
 }

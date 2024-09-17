@@ -6,8 +6,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class PaginationService {
   private currentPageSubject = new BehaviorSubject<number>(1);
-  private pageSize = 5;
   private totalItems = 0;
+  pageSize$ = new BehaviorSubject<number>(5);
 
   constructor() { }
 
@@ -19,8 +19,12 @@ export class PaginationService {
     this.currentPageSubject.next(page);
   }
 
+  setPageSize(size: number) {
+    this.pageSize$.next(size);
+  }
+
   getPageSize(): number {
-    return this.pageSize;
+    return this.pageSize$.value;
   }
 
   setTotalItems(count: number) {
@@ -28,6 +32,6 @@ export class PaginationService {
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.totalItems / this.pageSize);
+    return Math.ceil(this.totalItems / this.pageSize$.value);
   }
 }
