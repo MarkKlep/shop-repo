@@ -138,11 +138,19 @@
                 </td>
             </tr>
         </tbody>
-    </table>
 
-    <app-pagination 
-        [currentPage]="currentPage"
-        [totalPages]="totalPages"
-    >
-    </app-pagination>
+        <tfoot>
+            <tr>
+                <td
+                    [attr.colspan]="columnNames.length"
+                >
+                    <app-pagination 
+                        [currentPage]="currentPage"
+                        [totalPages]="totalPages"
+                    >
+                    </app-pagination>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 </div>
