@@ -19,7 +19,7 @@
                             class="form-select"
                         >
                             <option value="all">all</option>
-                            <option value="equal">=</option>
+                            <option selected value="equals">=</option>
                             <option value="more">></option>
                             <option value="less"><</option>
                         </select>
@@ -37,7 +37,7 @@
                             class="form-select"
                         >
                             <option value="all">all</option>
-                            <option value="equal">=</option>
+                            <option selected value="equals">=</option>
                             <option value="more">></option>
                             <option value="less"><</option>
                         </select>
@@ -73,7 +73,10 @@
                         <div class="table-head-name">
                             <p class="mb-0 me-2">{{ column | titlecase }}</p>
                         </div>
-                        <div class="table-head-sort-btns">
+                        <div 
+                            *ngIf="column !== 'image'"
+                            class="table-head-sort-btns"
+                        >
                             <a class="text-decoration-none me-2" (click)="sortBy(column, 'asc')">
                                 <span class="arrow">↑</span>
                             </a>

@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { TableService } from './services/table.service';
 
 @Component({
@@ -7,18 +7,7 @@ import { TableService } from './services/table.service';
   styleUrls: ['./invoices.component.scss']
 })
 export class InvoicesComponent { 
-  constructor(private tableService: TableService) {}
-
   pageSize = 5;
-
-  @HostListener('window:mousemove')
-  onMouseMove() {
-    if (this.tableService.isCursorRemovingRow) {
-      document.body.style.cursor = 'pointer';
-    } else {
-      document.body.style.cursor = 'default';
-    }
-  }
 
   handlePageSize(pageSize: number) {
     this.pageSize = pageSize;

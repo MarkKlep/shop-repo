@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
-
-export enum SignFilterEnum {
-  ALL = 'all',
-  MORE = 'more',
-  LESS = 'less',
-  EQUAL = 'equal'
-}
+import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +9,10 @@ export enum SignFilterEnum {
 export class FilterService {
   
   numberFilter = new BehaviorSubject<number | null>(null);
-  numberFilterSign = new BehaviorSubject<SignFilterEnum>(SignFilterEnum.ALL);
+  numberFilterSign = new BehaviorSubject<FilterSignEnum>(FilterSignEnum.EQUALS);
 
   dateFilter = new BehaviorSubject<string>('');
-  signFilter = new BehaviorSubject<SignFilterEnum>(SignFilterEnum.ALL);
+  signFilter = new BehaviorSubject<FilterSignEnum>(FilterSignEnum.EQUALS);
 
   nameFilter = new BehaviorSubject<string>('');
 

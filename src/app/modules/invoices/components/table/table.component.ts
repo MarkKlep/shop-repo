@@ -4,7 +4,7 @@ import { FilterService } from '../../services/filter.service';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
-import { SignFilterEnum } from '../../services/filter.service';
+import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.enum';
 import { PaginationService } from '../../services/pagination.service';
 
 @Component({
@@ -49,13 +49,13 @@ export class TableComponent implements OnInit, OnDestroy {
         let filteredInvoices = invoices;
     
         if (dataFilter) {
-          if (signfilter === SignFilterEnum.ALL) {
+          if (signfilter === FilterSignEnum.ALL) {
             filteredInvoices = filteredInvoices;
-          } else if (signfilter === SignFilterEnum.MORE) {
+          } else if (signfilter === FilterSignEnum.MORE) {
             filteredInvoices = filteredInvoices.filter(invoice => invoice.date > dataFilter);
-          } else if (signfilter === SignFilterEnum.LESS) {
+          } else if (signfilter === FilterSignEnum.LESS) {
             filteredInvoices = filteredInvoices.filter(invoice => invoice.date < dataFilter);
-          } else if (signfilter === SignFilterEnum.EQUAL) {
+          } else if (signfilter === FilterSignEnum.EQUALS) {
             filteredInvoices = filteredInvoices.filter(invoice => invoice.date === dataFilter);
           }
         }
@@ -65,13 +65,13 @@ export class TableComponent implements OnInit, OnDestroy {
         }
     
         if (numberFilter) {
-          if (numberFilterSign === SignFilterEnum.ALL) {
+          if (numberFilterSign === FilterSignEnum.ALL) {
             filteredInvoices = filteredInvoices;
-          } else if (numberFilterSign === SignFilterEnum.MORE) {
+          } else if (numberFilterSign === FilterSignEnum.MORE) {
             filteredInvoices = filteredInvoices.filter(invoice => +invoice.number > numberFilter);
-          } else if (numberFilterSign === SignFilterEnum.LESS) {
+          } else if (numberFilterSign === FilterSignEnum.LESS) {
             filteredInvoices = filteredInvoices.filter(invoice => +invoice.number < numberFilter);
-          } else if (numberFilterSign === SignFilterEnum.EQUAL) {
+          } else if (numberFilterSign === FilterSignEnum.EQUALS) {
             filteredInvoices = filteredInvoices.filter(invoice => +invoice.number === numberFilter);
           }
         }
@@ -214,7 +214,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   handleNumberFilterSign(event: Event) {
     const target = event.target as HTMLSelectElement;
-    const value = target.value as SignFilterEnum;
+    const value = target.value as FilterSignEnum;
 
     this.filterService.numberFilterSign.next(value);
   }
