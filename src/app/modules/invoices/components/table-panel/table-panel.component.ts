@@ -8,19 +8,7 @@ import { PaginationService } from '../../services/pagination.service';
   styleUrls: ['./table-panel.component.scss']
 })
 export class TablePanelComponent {
-  constructor(private tableService: TableService, private paginationService: PaginationService) { }
-
-  handleAddInvoice() {
-    this.tableService.handleAddInvoice();
-  }
-
-  handleRemoveRowMode() {
-    this.tableService.isCursorRemovingRow = !this.tableService.isCursorRemovingRow;
-  }
-
-  get isCursorRemovingRow() {
-    return this.tableService.isCursorRemovingRow;
-  }
+  constructor(private paginationService: PaginationService) { }
 
   handlePageSize(event: Event) {
     const target = event.target as HTMLSelectElement;

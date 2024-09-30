@@ -1,0 +1,69 @@
+<table class="table table-bordered ">
+    <thead class="table-light">
+        <tr>
+            <th *ngFor="let header of headers">
+              <div [ngSwitch]="header.type">
+                <div *ngSwitchCase="HeaderTypes.NUMBER">
+                  <input 
+                    type="number"
+                    class="form-control"
+                    placeholder="Number..."
+                  >
+                  <select
+                    class="form-select"
+                  >
+                    <option value="all">all</option>
+                    <option selected value="equals">=</option>
+                    <option value="more">></option>
+                    <option value="less"><</option>
+                  </select>
+                </div>
+                
+                <div *ngSwitchCase="HeaderTypes.NAME">
+                  <input 
+                    type="text"
+                    class="form-control"  
+                    placeholder="Name..."
+                  >
+                </div>
+
+                <div *ngSwitchCase="HeaderTypes.DATE">
+                  <input 
+                    type="date"
+                    class="form-select"
+                  >
+                  <select
+                    class="form-select"
+                  >
+                    <option value="all">all</option>
+                    <option selected value="equals">=</option>
+                    <option value="more">></option>
+                    <option value="less"><</option>
+                  </select>
+                </div>
+
+                <div *ngSwitchCase="HeaderTypes.STATUS">
+                  <select
+                    class="form-select"
+                  >
+                    <option selected value="All">All</option>
+                    <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+                  </select>
+                </div>
+              </div>
+            </th>
+        </tr>
+        <tr>
+            <th *ngFor="let header of headers">
+                <p>{{ header.label }}</p>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of items$ | async">
+            <td *ngFor="let header of headers">
+                {{ getValue(item, header.type) }}
+            </td>
+        </tr>
+    </tbody>
+</table>

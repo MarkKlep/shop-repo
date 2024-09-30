@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { TableService } from '../../services/table.service';
 import { FilterService } from '../../services/filter.service';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
@@ -145,16 +145,8 @@ export class TableComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleAddInvoice() {
-    this.tableService.handleAddInvoice();
-  }
-
   handleEditCellMode(row: Invoice, event: Event) {
     this.tableService.handleEditCellMode(row, event);
-  }
-
-  handleRemoveRow(id: string) {
-    this.tableService.handleRemoveRow(id);
   }
 
   isEditableCell(row: Invoice, column: string) {

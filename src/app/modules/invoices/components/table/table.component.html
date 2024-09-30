@@ -93,7 +93,6 @@
             <tr 
                 *ngFor="let invoice of visibleInvoices$ | async"
                 (dblclick)="handleEditCellMode(invoice, $event)"
-                (click)="handleRemoveRow(invoice.id)"
             >
                 <td 
                     *ngFor="let col of columnNames"

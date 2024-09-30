@@ -1,17 +1,40 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, delay, of, tap } from 'rxjs';
-import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { EditableCell } from 'src/app/core/models/invoice/table/editable-cell.interface';
+import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
+
+enum HeaderTypes {
+  NUMBER = 'number',
+  NAME = 'name',
+  DATE = 'date',
+  STATUS = 'status',
+  IMAGE = 'image'
+}
+
+interface TableHeader {
+  label: string;
+  type: HeaderTypes;
+  options: InvoiceStatus;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class TableService {
-  invoices = new BehaviorSubject<Invoice[]>([]);
-  editableCell = new BehaviorSubject<EditableCell | null>(null);
-  isCursorRemovingRow = false;
+  readonly columnNames: (keyof Invoice)[] = ['number', 'name', 'date', 'status', 'image'];
 
+  readonly headers: TableHeader[] = [
+    { label: 'Number', type: HeaderTypes.NUMBER, options: InvoiceStatus.CREATED },
+    { label: 'Name', type: HeaderTypes.NAME, options: InvoiceStatus.CREATED },
+    { label: 'Date', type: HeaderTypes.DATE, options: InvoiceStatus.CREATED },
+    { label: 'Status', type: HeaderTypes.STATUS, options: InvoiceStatus.CREATED },
+    { label: 'Image', type: HeaderTypes.IMAGE, options: InvoiceStatus.CREATED }
+  ];
+
+  invoices = new BehaviorSubject<Invoice[]>([]);
+  
+  editableCell = new BehaviorSubject<EditableCell | null>(null);
   fetchData = new BehaviorSubject<boolean>(false);
 
   saveInvoices(invoices: Invoice[]) {
@@ -28,36 +51,6 @@ export class TableService {
       delay(1000),
       tap(() => this.fetchData.next(false))
     ).subscribe();
-  }
-
-  handleAddInvoice() {
-    const now = new Date();
-    const formattedDate = now.toISOString().slice(0, 16);
-    const newInvoice = {
-        id: Math.random().toString(36).substr(2, 9),
-        number: '',
-        name: '',
-        date: formattedDate,
-        status: InvoiceStatus.CREATED,
-        image: ''
-    };
-
-    const prevInvoices = this.invoices.value;
-    const updatedInvoices: Invoice[] = [...prevInvoices, newInvoice];
-    this.invoices.next(updatedInvoices);
-    this.saveInvoices(updatedInvoices);
-  }
-
-  handleRemoveRow(id: string) {
-    if(this.isCursorRemovingRow) {
-      const prevInvoices = this.invoices.value;
-      const updatedInvoices = prevInvoices.filter(invoice => invoice.id !== id);
-
-      this.invoices.next(updatedInvoices);
-      this.saveInvoices(updatedInvoices);
-
-      this.isCursorRemovingRow = false;
-    }
   }
 
   handleSaveCell(invoice: Invoice, columnName: string, event: Event) {
