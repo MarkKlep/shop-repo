@@ -10,10 +10,4 @@ import { PaginationService } from '../../services/pagination.service';
 export class TablePanelComponent {
   constructor(private paginationService: PaginationService) { }
 
-  handlePageSize(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const pageSize = +target.value;
-
-    this.paginationService.setPageSize(pageSize);
-  }
 }

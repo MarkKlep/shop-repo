@@ -1,50 +1,79 @@
 <table class="table table-bordered ">
     <thead class="table-light">
         <tr>
-            <th *ngFor="let header of headers">
+            <th *ngFor="let header of headers" class="text-nowrap">
               <div [ngSwitch]="header.type">
-                <div *ngSwitchCase="HeaderTypes.NUMBER">
-                  <input 
-                    type="number"
-                    class="form-control"
-                    placeholder="Number..."
+                <div 
+                  *ngSwitchCase="HeaderTypes.NUMBER"
+                  class="d-flex align-items-center mb-3"
                   >
-                  <select
-                    class="form-select"
-                  >
-                    <option value="all">all</option>
-                    <option selected value="equals">=</option>
-                    <option value="more">></option>
-                    <option value="less"><</option>
-                  </select>
+                  <div class="me-2">
+                    <input 
+                      type="number"
+                      class="form-control"
+                      placeholder="Number..."
+                      (keyup)="inputNumber($event)"
+                    >
+                  </div>
+                  <div>
+                    <select
+                      class="form-select"
+                      (change)="selectSignNumber($event)"
+                    >
+                      <option value="all">all</option>
+                      <option selected [value]="FilterSignEnum.EQUALS">=</option>
+                      <option value="more">></option>
+                      <option value="less"><</option>
+                    </select>
+                  </div>
                 </div>
                 
-                <div *ngSwitchCase="HeaderTypes.NAME">
-                  <input 
-                    type="text"
-                    class="form-control"  
-                    placeholder="Name..."
-                  >
+                <div 
+                  *ngSwitchCase="HeaderTypes.NAME"
+                  class="d-flex align-items-center mb-3"
+                >
+                  <div>
+                    <input 
+                      type="text"
+                      class="form-control"  
+                      placeholder="Name..."
+                      (keyup)="inputName($event)"
+                    >
+                  </div>
                 </div>
 
-                <div *ngSwitchCase="HeaderTypes.DATE">
-                  <input 
-                    type="date"
-                    class="form-select"
+                <div 
+                  *ngSwitchCase="HeaderTypes.DATE"
+                  class="d-flex align-items-center mb-3"  
+                >
+                  <div class="me-2">
+                    <input 
+                      type="date"
+                      class="form-select"
+                      (change)="inputDate($event)"
+                    >                    
+                  </div>
+
+                  <div>
+                    <select
+                      class="form-select"
+                      (change)="selectSignDate($event)"
+                    >
+                      <option value="all">all</option>
+                      <option selected [value]="FilterSignEnum.EQUALS">=</option>
+                      <option value="more">></option>
+                      <option value="less"><</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div 
+                  *ngSwitchCase="HeaderTypes.STATUS"
+                  class="d-flex align-items-center mb-3"
                   >
                   <select
                     class="form-select"
-                  >
-                    <option value="all">all</option>
-                    <option selected value="equals">=</option>
-                    <option value="more">></option>
-                    <option value="less"><</option>
-                  </select>
-                </div>
-
-                <div *ngSwitchCase="HeaderTypes.STATUS">
-                  <select
-                    class="form-select"
+                    (change)="selectStatus($event)"
                   >
                     <option selected value="All">All</option>
                     <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
@@ -54,15 +83,50 @@
             </th>
         </tr>
         <tr>
-            <th *ngFor="let header of headers">
-                <p>{{ header.label }}</p>
-            </th>
+          <th *ngFor="let header of headers" style="vertical-align: bottom;">
+            <div class="d-flex justify-content-between align-items-end" style="height: 100%;">
+              <p class="mb-0">{{ header.label }}</p>
+              <div>
+                <button
+                  *ngIf=" header.label !== 'Image'"
+                  class="btn btn-link"
+                  (click)="sortBy(header, true)"
+                >
+                  &#8593;
+                </button>
+                <button
+                  *ngIf=" header.label !== 'Image'"
+                  class="btn btn-link"
+                  (click)="sortBy(header, false)"
+                >
+                  &#8595;
+                </button>
+              </div>
+            </div>
+          </th>          
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of items$ | async">
-            <td *ngFor="let header of headers">
-                {{ getValue(item, header.type) }}
+        <tr *ngFor="let item of visibleRows$ | async">
+            <td 
+              *ngFor="let header of headers"
+              (dblclick)="setEditableCell(item, header)"  
+            >
+              <div [ngSwitch]="isEdittable(item, header)">
+                <div *ngSwitchCase="true">
+                  <input 
+                    type="text"
+                    class="form-control"
+                    [value]="getValue(item, header.type)"
+                    (keyup)="editCell($event)"
+                    (keyup.enter)="setEditableCell(null, null)"
+                    (blur)="setEditableCell(null, null)"
+                  >
+                </div>
+                <div *ngSwitchDefault>
+                  {{ getValue(item, header.type) }}
+                </div>
+              </div>
             </td>
         </tr>
     </tbody>

@@ -5,33 +5,36 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PaginationService {
-  private currentPageSubject = new BehaviorSubject<number>(1);
-  private totalItems = 0;
-  pageSize$ = new BehaviorSubject<number>(5);
-
   constructor() { }
 
-  get currentPage$(): Observable<number> {
-    return this.currentPageSubject.asObservable();
+  currentPage$ = new BehaviorSubject<number>(1);
+  totalItems$ = new BehaviorSubject<number>(0);
+  pageSize = 5;
+
+  setTotalItems(totalItems: number) {
+    this.totalItems$.next(totalItems);
+  }
+
+  getTotalItems(): Observable<number> {
+    return this.totalItems$.asObservable();
+  }
+
+  getCurrentPage(): Observable<number> {
+    return this.currentPage$.asObservable();
   }
 
   setPage(page: number) {
-    this.currentPageSubject.next(page);
-  }
-
-  setPageSize(size: number) {
-    this.pageSize$.next(size);
-  }
-
-  getPageSize(): number {
-    return this.pageSize$.value;
-  }
-
-  setTotalItems(count: number) {
-    this.totalItems = count;
+    console.log('!!!')
+    this.currentPage$ .next(page);
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.totalItems / this.pageSize$.value);
+    return Math.ceil(this.totalItems$.value / this.pageSize);
+  }
+
+  goToPage(items: any[]) {
+    const start = (this.currentPage$.value - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return items.slice(start, end);
   }
 }
