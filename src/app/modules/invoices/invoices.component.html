@@ -1,14 +1,9 @@
 <app-panel></app-panel>
 
-<app-table-panel></app-table-panel>
-
-<app-table1 
-    [items$]="invoices" 
-    [headers]="headers"
-    (fetchingItems)="onLoading($event)"
+<app-table
+    [items]="invoices" 
+    [config]="config"
+    [isLoading]="fetchingItems$.getValue()"
+    (fetchItems)="getInvoices($event)"
 >
-</app-table1>
-
-<app-loader *ngIf="isLoading"></app-loader>
-
-<app-pagination ></app-pagination>
+</app-table>

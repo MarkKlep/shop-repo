@@ -1,66 +1,116 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, delay, map, Observable, of, tap } from 'rxjs';
+import { delay, map, Observable, of, tap } from 'rxjs';
+import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.enum';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
-import { EditableCell } from 'src/app/core/models/invoice/table/editable-cell.interface';
-import { PaginationService } from './pagination.service';
 
-
-enum HeaderTypes {
-  NUMBER = 'number',
-  NAME = 'name',
-  DATE = 'date',
-  STATUS = 'status',
-  IMAGE = 'image'
-}
-
-interface TableHeader {
-  label: string;
-  type: HeaderTypes;
+interface TableFilters {
+  number: string;
+  numberSign: FilterSignEnum;
+  name: string;
+  date: string;
+  dateSign: FilterSignEnum;
+  status: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class TableService {
-  constructor(private paginationService: PaginationService) { }
+  constructor() { }
 
-  readonly headers: TableHeader[] = [
-    { label: 'Number', type: HeaderTypes.NUMBER },
-    { label: 'Name', type: HeaderTypes.NAME },
-    { label: 'Date', type: HeaderTypes.DATE },
-    { label: 'Status', type: HeaderTypes.STATUS },
-    { label: 'Image', type: HeaderTypes.IMAGE }
-  ];
-
-  invoices = new BehaviorSubject<Invoice[]>([]);
-
-  editableCell = new BehaviorSubject<EditableCell | null>(null);
-
-  backendActionTrigger = new BehaviorSubject<boolean>(false);
-
-  getInvoices() {
-    const storedInvoices = localStorage.getItem('invoices');
-    const parsedInvoices: Invoice[] = storedInvoices ? JSON.parse(storedInvoices) : [];
-
-    of(parsedInvoices).pipe(
-      tap(() => {
-        this.backendActionTrigger.next(true);
-      }),
+  getInvoices(filters: TableFilters, sortOptions: any, pagination: any): Observable<Invoice[]> {
+    const storedInvoices =  of(localStorage.getItem('invoices')).pipe(
       delay(1000),
-      tap(() => {
-        const invoices = parsedInvoices.map(invoice => ({
+      map(invoices => {
+        const parsedInvoices: Invoice[] = invoices ? JSON.parse(invoices) : [];
+        return parsedInvoices.map(invoice => ({
           ...invoice,
           image: atob(invoice.image)
         }));
+      })
+    );
     
-        this.invoices.next(invoices);
-      }),
-      tap(() => {
-        this.backendActionTrigger.next(false);
+    const filteredInvoices = storedInvoices.pipe(
+      map((invoices) => {
+        if (!filters) return invoices;
 
-        this.paginationService.setTotalItems(parsedInvoices.length);
+        return this.filterItems(invoices, filters);
       }),
-    ).subscribe();
+      map((invoices) => {
+        if(!sortOptions) return invoices;
+
+        const { headerType, isAscending } = sortOptions;
+
+        return invoices.sort(this.sortBy(headerType, isAscending));        
+      }),
+      map((invoices) => {
+        if (!pagination) return invoices;
+        const { currentPage } = pagination;
+
+        return this.goToPage(invoices, currentPage);
+      })
+    );
+
+    return filteredInvoices;
   }
 
+  private filterItems(items: Invoice[], filters: TableFilters): Invoice[] {
+    let filteredItems = items;
+
+    const { number, numberSign, name, date, dateSign, status } = filters;
+
+    if (number) {
+      switch(numberSign) {
+        case FilterSignEnum.EQUALS:
+          filteredItems = filteredItems.filter(item => item.number === number);
+          break;
+        case FilterSignEnum.LESS:
+          filteredItems = filteredItems.filter(item => item.number < number);
+          break;
+        case FilterSignEnum.MORE:
+          filteredItems = filteredItems.filter(item => item.number > number);
+          break;
+      }
+    }
+
+    if (name) {
+      filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(name.toLowerCase()));
+    }
+
+    if (date) {
+      switch(dateSign) {
+        case FilterSignEnum.EQUALS:
+          filteredItems = filteredItems.filter(item => item.date === date);
+          break;
+        case FilterSignEnum.LESS:
+          filteredItems = filteredItems.filter(item => item.date < date);
+          break;
+        case FilterSignEnum.MORE:
+          filteredItems = filteredItems.filter(item => item.date > date);
+          break;
+      }
+    }
+
+    if (status !== 'All') {
+      filteredItems = filteredItems.filter(item => item.status === status);
+    }
+
+    return filteredItems;
+  }
+
+  private sortBy(headerType: string, isAsccending: boolean) {
+    return (a: any, b: any) => {
+      if (isAsccending) {
+        return a[headerType] > b[headerType] ? 1 : -1;
+      } else {
+        return a[headerType] < b[headerType] ? 1 : -1;
+      }
+    }
+  }
+
+  private goToPage(items: any[], currentPage: number) {
+    const start = (currentPage - 1) * 5;
+    const end = start + 5;
+    return items.slice(start, end);
+  }
 }

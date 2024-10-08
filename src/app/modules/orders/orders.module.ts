@@ -3,19 +3,19 @@ import { CommonModule } from '@angular/common';
 import { OrdersComponent } from './orders.component';
 import { RouterModule } from '@angular/router';
 import { OrdersroutingModule } from './orders-routing.module';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { PanelModule } from 'src/app/core/panel/panel.module';
 
 
 
 @NgModule({
   declarations: [
-    OrdersComponent
+    OrdersComponent,
   ],
   imports: [
     CommonModule,
     RouterModule,
     OrdersroutingModule,
-    SharedModule
+    PanelModule
   ]
 })
 export class OrdersModule { }

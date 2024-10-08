@@ -1,4 +1,4 @@
-<table class="table table-bordered ">
+<table class="table table-bordered mt-3">
     <thead class="table-light">
         <tr>
             <th *ngFor="let header of headers" class="text-nowrap">
@@ -12,13 +12,15 @@
                       type="number"
                       class="form-control"
                       placeholder="Number..."
-                      (keyup)="inputNumber($event)"
+                      name="number"
+                      (keyup)="filterItems($event)"
                     >
                   </div>
                   <div>
                     <select
                       class="form-select"
-                      (change)="selectSignNumber($event)"
+                      name="numberSign"
+                      (change)="filterItems($event)"
                     >
                       <option value="all">all</option>
                       <option selected [value]="FilterSignEnum.EQUALS">=</option>
@@ -37,7 +39,8 @@
                       type="text"
                       class="form-control"  
                       placeholder="Name..."
-                      (keyup)="inputName($event)"
+                      name="name"
+                      (keyup)="filterItems($event)"
                     >
                   </div>
                 </div>
@@ -50,14 +53,16 @@
                     <input 
                       type="date"
                       class="form-select"
-                      (change)="inputDate($event)"
+                      name="date"
+                      (change)="filterItems($event)"
                     >                    
                   </div>
 
                   <div>
                     <select
                       class="form-select"
-                      (change)="selectSignDate($event)"
+                      name="dateSign"
+                      (change)="filterItems($event)"
                     >
                       <option value="all">all</option>
                       <option selected [value]="FilterSignEnum.EQUALS">=</option>
@@ -73,7 +78,8 @@
                   >
                   <select
                     class="form-select"
-                    (change)="selectStatus($event)"
+                    name="status"
+                    (change)="filterItems($event)"
                   >
                     <option selected value="All">All</option>
                     <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
@@ -107,7 +113,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of visibleRows$ | async">
+        <tr *ngFor="let item of items">
             <td 
               *ngFor="let header of headers"
               (dblclick)="setEditableCell(item, header)"  
@@ -131,3 +137,11 @@
         </tr>
     </tbody>
 </table>
+
+<app-pagination
+  [pagination]="pagination"
+  [totalItems]="items?.length || 10"
+  (fetchCurrentPage)="setPage($event)"
+></app-pagination>
+
+<app-loader *ngIf="isLoading"></app-loader>
