@@ -10,7 +10,7 @@ import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.in
 export class InvoiceApiService {
   constructor() { }
 
-  getInvoices(filters: TableFilters, sortOptions?: any, currentPage?: number): Observable<{ items: Invoice[]; amountOfItems: number }> {
+  getInvoices(filters: TableFilters, currentPage: number, sortOptions?: any): Observable<{ items: Invoice[]; amountOfItems: number }> {
     let totalLength = 0;
     
     const storedInvoices = of(localStorage.getItem('invoices')).pipe(
@@ -30,7 +30,10 @@ export class InvoiceApiService {
     const filteredInvoices = storedInvoices.pipe(
       map((invoices) => {
         if (!filters) return invoices;
-        return this.filterItems(invoices, filters);
+
+        const filtered = this.filterItems(invoices, filters);
+        totalLength = filtered.length;
+        return filtered;
       }),
     );
   
@@ -39,14 +42,13 @@ export class InvoiceApiService {
         if (!sortOptions) return invoices;
   
         const { headerType, isAscending } = sortOptions;
-  
         return invoices.sort(this.sortBy(headerType, isAscending));
       }),
     );
   
     const paginatedInvoices = sortedInvoices.pipe(
       map((invoices) => {
-        const paginated = currentPage ? this.goToPage(invoices, currentPage) : this.goToPage(invoices, 1);
+        const paginated = this.goToPage(invoices, currentPage);
         return {
           items: paginated,
           amountOfItems: totalLength,
@@ -111,7 +113,7 @@ export class InvoiceApiService {
     }
   }
 
-  private goToPage(items: any[], currentPage: number) {
+  private goToPage(items: Invoice[], currentPage: number): Invoice[] {
     const start = (currentPage - 1) * 5;
     const end = start + 5;
     return items.slice(start, end);

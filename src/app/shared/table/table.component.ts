@@ -24,13 +24,17 @@ export class TableComponent {
   filters: TableFilters | any = null;
 
   isLoading = false;
+  currentPage = 1;
 
   ngOnInit() {
     this.headers = this.config.headers;
     this.filters = this.config.filters;
 
     this.isLoading = true;
-    this.fetchItems.emit({filters: this.filters});
+    this.fetchItems.emit({
+      filters: this.filters,
+      currentPage: this.currentPage,
+    });
   }
 
   ngOnChanges() {
@@ -48,21 +52,27 @@ export class TableComponent {
     this.isLoading = true;
     this.filters = { ...this.filters, [name]: value };
 
-    this.fetchItems.emit({filters: this.filters});
+    this.fetchItems.emit({
+      filters: this.filters,
+      currentPage: this.currentPage,
+    });
   }
 
   sortBy(header: TableHeader, isAscending: boolean) {
     const headerType = header.type;
-
     this.isLoading = true;
+
     this.fetchItems.emit({
       filters: this.filters,
-      sortOptions: {headerType, isAscending}
+      sortOptions: {headerType, isAscending},
+      currentPage: this.currentPage,
     });
   }
 
   setPage(currentPage: number) {
+    this.currentPage = currentPage;
     this.isLoading = true;
+
     this.fetchItems.emit({
       filters: this.filters,
       currentPage,

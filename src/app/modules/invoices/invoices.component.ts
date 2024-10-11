@@ -58,9 +58,9 @@ export class InvoicesComponent {
   getInvoices(config: any) {
     const filters = config.filters as TableFilters;
     const sortOptions = config.sortOptions;
-    const currentPage = config.currentPage as number | undefined;
+    const currentPage = config.currentPage as number;
 
-    this.invoiceApi.getInvoices(filters, sortOptions, currentPage).subscribe((dbData) => {
+    this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbData) => {
       this.invoices = dbData.items;
       this.invoicesLength = dbData.amountOfItems;
     });
