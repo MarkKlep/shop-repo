@@ -6,6 +6,7 @@ import { HeaderTypes } from 'src/app/core/models/invoice/table/header-types.enum
 import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.interface';
 import { TableHeader } from 'src/app/core/models/invoice/table/table-header.interface';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
+import { TableSorting } from 'src/app/core/models/invoice/table/table-sorting.interface';
 
 
 @Component({
@@ -44,7 +45,7 @@ export class InvoicesComponent {
 
   getInvoices(requestOptions: any) {
     const filters = requestOptions .filters as TableFilters;
-    const sortOptions = requestOptions.sortOptions;
+    const sortOptions = requestOptions.sortOptions as TableSorting;
     const currentPage = requestOptions.currentPage as number;
 
     this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbInvoices) => {
