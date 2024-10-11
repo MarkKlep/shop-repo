@@ -17,9 +17,6 @@ export class InvoiceApiService {
       delay(1000),
       map(invoices => {
         const parsedInvoices: Invoice[] = invoices ? JSON.parse(invoices) : [];
-
-        totalLength = parsedInvoices.length;
-
         return parsedInvoices.map(invoice => ({
           ...invoice,
           image: atob(invoice.image)
@@ -29,8 +26,6 @@ export class InvoiceApiService {
   
     const filteredInvoices = storedInvoices.pipe(
       map((invoices) => {
-        if (!filters) return invoices;
-
         const filtered = this.filterItems(invoices, filters);
         totalLength = filtered.length;
         return filtered;
