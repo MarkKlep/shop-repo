@@ -1,6 +1,6 @@
 export enum FilterSignEnum {
-    MORE = 'more',
-    LESS = 'less',
-    EQUALS = 'equal',
+    MORE = '>',
+    LESS = '<',
+    EQUALS = '=',
     ALL = 'all'
   }

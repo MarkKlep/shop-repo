@@ -22,7 +22,11 @@
                       name="numberSign"
                       (change)="filterItems($event)"
                     >
-                      <option *ngFor="let sign of header.options" [value]="sign">
+                      <option 
+                        *ngFor="let sign of header.options" 
+                        [value]="sign"
+                        [selected]="sign === FilterSignEnum.EQUALS"
+                      >
                         {{ sign }}
                       </option>
                     </select>
@@ -63,7 +67,11 @@
                       name="dateSign"
                       (change)="filterItems($event)"
                     >
-                      <option *ngFor="let sign of header.options" [value]="sign">
+                      <option 
+                        *ngFor="let sign of header.options" 
+                        [value]="sign"
+                        [selected]="sign === FilterSignEnum.EQUALS"
+                      >
                         {{ sign }}
                       </option>
                     </select>

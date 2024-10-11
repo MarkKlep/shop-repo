@@ -3,6 +3,7 @@ import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { TableHeader } from 'src/app/core/models/invoice/table/table-header.interface';
 import { HeaderTypes } from 'src/app/core/models/invoice/table/header-types.enum';
 import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.interface';
+import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.enum';
 
 @Component({
   selector: 'app-table',
@@ -13,6 +14,7 @@ export class TableComponent {
   constructor() {}
 
   HeaderTypes = HeaderTypes;
+  FilterSignEnum = FilterSignEnum;
 
   @Input() items: Invoice[] = [];
   @Input() totalLength = 0;
