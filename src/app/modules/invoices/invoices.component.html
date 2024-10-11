@@ -1,9 +1,9 @@
 <app-panel></app-panel>
 
 <app-table
+    [headers]="config"
     [items]="invoices" 
     [totalLength]="invoicesLength"
-    [headers]="config"
     (fetchItems)="getInvoices($event)"
 >
 </app-table>
