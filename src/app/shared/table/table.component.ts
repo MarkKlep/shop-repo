@@ -28,6 +28,9 @@ export class TableComponent {
   isLoading = false;
   currentPage = 1;
 
+  headerType = '';
+  isAscending = false;
+
   ngOnInit() {
     this.headers = this.config.headers;
     this.filters = this.config.filters;
@@ -62,6 +65,8 @@ export class TableComponent {
 
   sortBy(header: TableHeader, isAscending: boolean) {
     const headerType = header.type;
+    this.headerType = headerType;
+    this.isAscending = isAscending;
     this.isLoading = true;
 
     this.fetchItems.emit({
@@ -77,6 +82,7 @@ export class TableComponent {
 
     this.fetchItems.emit({
       filters: this.filters,
+      sortOptions: {headerType: this.headerType, isAscending: this.isAscending},
       currentPage,
     });
   }
