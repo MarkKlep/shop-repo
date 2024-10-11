@@ -8,6 +8,10 @@ table {
     border-radius: 0.25rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
+    tbody {
+        height: 300px;
+    }
+
     th, td {
         width: 20%;
     }
@@ -18,4 +22,15 @@ table {
         border-top: 1px solid #dee2e6;
  
     }
+}
+
+select {
+    max-width: 100%;
+    padding: 8px 30px 8px 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    appearance: none;
+    background-size: 10px;
+    cursor: pointer;
 }
