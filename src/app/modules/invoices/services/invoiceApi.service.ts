@@ -10,9 +10,18 @@ import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.in
 export class InvoiceApiService {
   constructor() { }
 
-  getInvoices(filters: TableFilters, currentPage: number, sortOptions?: any): Observable<{ items: Invoice[]; amountOfItems: number }> {
-    let totalLength = 0;
-    
+  getTotalLength(): Observable<number> {
+    const totalLength = of(localStorage.getItem('invoices')).pipe(
+      delay(1000),
+      map(invoices => {
+        const parsedInvoices: Invoice[] = invoices ? JSON.parse(invoices) : [];
+        return parsedInvoices.length;
+      })
+    );
+    return totalLength;
+  }
+
+  getInvoices(filters: TableFilters, currentPage: number, sortOptions?: any): Observable<Invoice[]> {
     const storedInvoices = of(localStorage.getItem('invoices')).pipe(
       delay(1000),
       map(invoices => {
@@ -27,7 +36,6 @@ export class InvoiceApiService {
     const filteredInvoices = storedInvoices.pipe(
       map((invoices) => {
         const filtered = this.filterItems(invoices, filters);
-        totalLength = filtered.length;
         return filtered;
       }),
     );
@@ -43,11 +51,7 @@ export class InvoiceApiService {
   
     const paginatedInvoices = sortedInvoices.pipe(
       map((invoices) => {
-        const paginated = this.goToPage(invoices, currentPage);
-        return {
-          items: paginated,
-          amountOfItems: totalLength,
-        };
+        return this.goToPage(invoices, currentPage);
       }),
     );
   

@@ -47,9 +47,14 @@ export class InvoicesComponent {
     const sortOptions = requestOptions.sortOptions;
     const currentPage = requestOptions.currentPage as number;
 
-    this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbData) => {
-      this.invoices = dbData.items;
-      this.invoicesLength = dbData.amountOfItems;
+    this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbInvoices) => {
+      this.invoices = dbInvoices;
+    });
+  }
+
+  ngOnInit() {
+    this.invoiceApi.getTotalLength().subscribe((length) => {
+      this.invoicesLength = length;
     });
   }
 }
