@@ -13,6 +13,15 @@ import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.e
 export class TableComponent {
   constructor() {}
 
+  filters: TableFilters = {
+    number: '',
+    numberSign: FilterSignEnum.EQUALS,
+    name: '',
+    date: '',
+    dateSign: FilterSignEnum.EQUALS,
+    status: 'All',
+  };
+
   HeaderTypes = HeaderTypes;
   FilterSignEnum = FilterSignEnum;
 
@@ -23,7 +32,6 @@ export class TableComponent {
   @Output() fetchItems = new EventEmitter<any>();
 
   headers: TableHeader[] = [];
-  filters: TableFilters | any = null;
 
   isLoading = false;
   currentPage = 1;

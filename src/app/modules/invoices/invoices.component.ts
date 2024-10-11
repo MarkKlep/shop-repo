@@ -41,18 +41,9 @@ export class InvoicesComponent {
     ] },
     { label: 'Image', type: HeaderTypes.IMAGE }
   ];
-  filters: TableFilters = {
-    number: '',
-    numberSign: FilterSignEnum.EQUALS,
-    name: '',
-    date: '',
-    dateSign: FilterSignEnum.EQUALS,
-    status: 'All',
-  };
 
-  config: TableConfig = {
+  config: any = {
     headers: this.headers,
-    filters: this.filters,
   };
 
   getInvoices(config: any) {
