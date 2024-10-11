@@ -27,11 +27,9 @@ export class TableComponent {
 
   @Input() items: Invoice[] = [];
   @Input() totalLength = 0;
-  @Input() config: any = null;
+  @Input() headers: TableHeader[] = [];
 
   @Output() fetchItems = new EventEmitter<any>();
-
-  headers: TableHeader[] = [];
 
   isLoading = false;
   currentPage = 1;
@@ -40,9 +38,6 @@ export class TableComponent {
   isAscending = false;
 
   ngOnInit() {
-    this.headers = this.config.headers;
-    this.filters = this.config.filters;
-
     this.isLoading = true;
     this.fetchItems.emit({
       filters: this.filters,

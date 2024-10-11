@@ -5,7 +5,6 @@ import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.e
 import { HeaderTypes } from 'src/app/core/models/invoice/table/header-types.enum';
 import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.interface';
 import { TableHeader } from 'src/app/core/models/invoice/table/table-header.interface';
-import { TableConfig } from 'src/app/core/models/invoice/table/table-config.interface';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
 
 
@@ -17,9 +16,7 @@ import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
 export class InvoicesComponent { 
   constructor(private invoiceApi: InvoiceApiService) { }
 
-  invoices: Invoice[] = [];
-  invoicesLength = 0;
-  headers: TableHeader[] = [
+  readonly config: TableHeader[] = [
     { label: 'Number', type: HeaderTypes.NUMBER, options: [
       FilterSignEnum.ALL,
       FilterSignEnum.EQUALS,
@@ -42,9 +39,8 @@ export class InvoicesComponent {
     { label: 'Image', type: HeaderTypes.IMAGE }
   ];
 
-  config: any = {
-    headers: this.headers,
-  };
+  invoices: Invoice[] = [];
+  invoicesLength = 0;
 
   getInvoices(config: any) {
     const filters = config.filters as TableFilters;
