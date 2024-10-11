@@ -42,12 +42,6 @@ export class InvoicesComponent {
   invoices: Invoice[] = [];
   invoicesLength = 0;
 
-  ngOnInit() {
-    this.invoiceApi.getTotalLength().subscribe((length) => {
-      this.invoicesLength = length;
-    });
-  }
-
   getInvoices(requestOptions: any) {
     const filters = requestOptions .filters as TableFilters;
     const sortOptions = requestOptions.sortOptions;
@@ -55,6 +49,7 @@ export class InvoicesComponent {
 
     this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbInvoices) => {
       this.invoices = dbInvoices;
+      this.invoicesLength = this.invoiceApi.getFetchedInvoicesCount();
     });
   }
 }

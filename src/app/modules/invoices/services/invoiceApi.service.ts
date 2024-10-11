@@ -10,15 +10,10 @@ import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.in
 export class InvoiceApiService {
   constructor() { }
 
-  getTotalLength(): Observable<number> {
-    const totalLength = of(localStorage.getItem('invoices')).pipe(
-      delay(1000),
-      map(invoices => {
-        const parsedInvoices: Invoice[] = invoices ? JSON.parse(invoices) : [];
-        return parsedInvoices.length;
-      })
-    );
-    return totalLength;
+  private fetchedLength = 0;
+
+  getFetchedInvoicesCount(): number {
+    return this.fetchedLength;;
   }
 
   getInvoices(filters: TableFilters, currentPage: number, sortOptions?: any): Observable<Invoice[]> {
@@ -36,6 +31,7 @@ export class InvoiceApiService {
     const filteredInvoices = storedInvoices.pipe(
       map((invoices) => {
         const filtered = this.filterItems(invoices, filters);
+        this.fetchedLength = filtered.length;
         return filtered;
       }),
     );
