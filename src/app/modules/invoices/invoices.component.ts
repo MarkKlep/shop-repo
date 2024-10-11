@@ -42,10 +42,10 @@ export class InvoicesComponent {
   invoices: Invoice[] = [];
   invoicesLength = 0;
 
-  getInvoices(config: any) {
-    const filters = config.filters as TableFilters;
-    const sortOptions = config.sortOptions;
-    const currentPage = config.currentPage as number;
+  getInvoices(requestOptions: any) {
+    const filters = requestOptions .filters as TableFilters;
+    const sortOptions = requestOptions.sortOptions;
+    const currentPage = requestOptions.currentPage as number;
 
     this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbData) => {
       this.invoices = dbData.items;
