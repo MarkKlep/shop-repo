@@ -109,8 +109,9 @@ export class InvoiceApiService {
   }
 
   private goToPage(items: Invoice[], currentPage: number): Invoice[] {
-    const start = (currentPage - 1) * 5;
-    const end = start + 5;
+    const pageSize = 5;
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
     return items.slice(start, end);
   }
 }
