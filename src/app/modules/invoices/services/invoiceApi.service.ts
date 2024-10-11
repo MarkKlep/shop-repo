@@ -3,6 +3,7 @@ import { delay, map, Observable, of } from 'rxjs';
 import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.enum';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.interface';
+import { TableSorting } from 'src/app/core/models/invoice/table/table-sorting.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class InvoiceApiService {
     return this.fetchedLength;;
   }
 
-  getInvoices(filters: TableFilters, currentPage: number, sortOptions?: any): Observable<Invoice[]> {
+  getInvoices(filters: TableFilters, currentPage: number, sortOptions?: TableSorting): Observable<Invoice[]> {
     const storedInvoices = of(localStorage.getItem('invoices')).pipe(
       delay(1000),
       map(invoices => {
