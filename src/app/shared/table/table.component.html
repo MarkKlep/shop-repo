@@ -22,10 +22,9 @@
                       name="numberSign"
                       (change)="filterItems($event)"
                     >
-                      <option value="all">all</option>
-                      <option selected [value]="FilterSignEnum.EQUALS">=</option>
-                      <option value="more">></option>
-                      <option value="less"><</option>
+                      <option *ngFor="let sign of header.options" [value]="sign">
+                        {{ sign }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -64,10 +63,9 @@
                       name="dateSign"
                       (change)="filterItems($event)"
                     >
-                      <option value="all">all</option>
-                      <option selected [value]="FilterSignEnum.EQUALS">=</option>
-                      <option value="more">></option>
-                      <option value="less"><</option>
+                      <option *ngFor="let sign of header.options" [value]="sign">
+                        {{ sign }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -82,7 +80,9 @@
                     (change)="filterItems($event)"
                   >
                     <option selected value="All">All</option>
-                    <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+                    <option *ngFor="let status of header.options" [value]="status">
+                      {{ status }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -116,32 +116,16 @@
         <tr *ngFor="let item of items">
             <td 
               *ngFor="let header of headers"
-              (dblclick)="setEditableCell(item, header)"  
             >
-              <div [ngSwitch]="isEdittable(item, header)">
-                <div *ngSwitchCase="true">
-                  <input 
-                    type="text"
-                    class="form-control"
-                    [value]="getValue(item, header.type)"
-                    (keyup)="editCell($event)"
-                    (keyup.enter)="setEditableCell(null, null)"
-                    (blur)="setEditableCell(null, null)"
-                  >
-                </div>
-                <div *ngSwitchDefault>
-                  {{ getValue(item, header.type) }}
-                </div>
-              </div>
+              {{getValue(item, header.type)}}
             </td>
         </tr>
     </tbody>
 </table>
 
 <app-pagination
-  [pagination]="pagination"
-  [totalItems]="items?.length || 10"
-  (fetchCurrentPage)="setPage($event)"
+  [totalLength]="totalLength"
+  (pageChange)="setPage($event)"
 ></app-pagination>
 
 <app-loader *ngIf="isLoading"></app-loader>

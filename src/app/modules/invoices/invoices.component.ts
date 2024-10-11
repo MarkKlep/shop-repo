@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { TableService } from './services/table.service';
+import { InvoiceApiService } from './services/invoiceApi.service';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
-import { BehaviorSubject } from 'rxjs';
 import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.enum';
 import { HeaderTypes } from 'src/app/core/models/invoice/table/header-types.enum';
-import { Pagination } from 'src/app/core/models/invoice/table/pagination.interface';
 import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.interface';
 import { TableHeader } from 'src/app/core/models/invoice/table/table-header.interface';
 import { TableConfig } from 'src/app/core/models/invoice/table/table-config.interface';
+import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
 
 
 @Component({
@@ -16,14 +15,30 @@ import { TableConfig } from 'src/app/core/models/invoice/table/table-config.inte
   styleUrls: ['./invoices.component.scss']
 })
 export class InvoicesComponent { 
-  constructor(private tableService: TableService) { }
+  constructor(private invoiceApi: InvoiceApiService) { }
 
   invoices: Invoice[] = [];
-  readonly headers: TableHeader[] = [
-    { label: 'Number', type: HeaderTypes.NUMBER },
+  invoicesLength = 0;
+  headers: TableHeader[] = [
+    { label: 'Number', type: HeaderTypes.NUMBER, options: [
+      FilterSignEnum.ALL,
+      FilterSignEnum.EQUALS,
+      FilterSignEnum.LESS,
+      FilterSignEnum.MORE
+    ], },
     { label: 'Name', type: HeaderTypes.NAME },
-    { label: 'Date', type: HeaderTypes.DATE },
-    { label: 'Status', type: HeaderTypes.STATUS },
+    { label: 'Date', type: HeaderTypes.DATE, options: [
+      FilterSignEnum.ALL,
+      FilterSignEnum.EQUALS,
+      FilterSignEnum.LESS,
+      FilterSignEnum.MORE
+    ], },
+    { label: 'Status', type: HeaderTypes.STATUS, 
+      options: [
+      InvoiceStatus.CANCELLED,
+      InvoiceStatus.CREATED,
+      InvoiceStatus.PAID
+    ] },
     { label: 'Image', type: HeaderTypes.IMAGE }
   ];
   filters: TableFilters = {
@@ -34,28 +49,20 @@ export class InvoicesComponent {
     dateSign: FilterSignEnum.EQUALS,
     status: 'All',
   };
-  pagination: Pagination = {
-    pageSize: 5,
-    currentPage: 1,
-    totalPages: 0,
-  };
 
   config: TableConfig = {
     headers: this.headers,
     filters: this.filters,
-    pagination: this.pagination,
   };
 
-  fetchingItems$ = new BehaviorSubject<boolean>(false);
-
   getInvoices(config: any) {
-    const { filters, sortOptions, pagination } = config;
+    const filters = config.filters as TableFilters;
+    const sortOptions = config.sortOptions;
+    const currentPage = config.currentPage as number | undefined;
 
-    this.fetchingItems$.next(true);
-
-    this.tableService.getInvoices(filters, sortOptions, pagination).subscribe(dbInvoices => {
-      this.invoices = dbInvoices;
-      this.fetchingItems$.next(false);
+    this.invoiceApi.getInvoices(filters, sortOptions, currentPage).subscribe((dbData) => {
+      this.invoices = dbData.items;
+      this.invoicesLength = dbData.amountOfItems;
     });
   }
 }

@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { InvoicesModule } from './modules/invoices/invoices.module';
 import { AuthUserGuard } from './core/guards/auth-user.guard';
+import { PanelModule } from './core/panel/panel.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { AuthUserGuard } from './core/guards/auth-user.guard';
     BrowserAnimationsModule,
     AuthModule,
     OrdersModule,
-    InvoicesModule
+    InvoicesModule,
+    PanelModule
   ],
   providers: [AuthUserGuard],
   bootstrap: [AppComponent]

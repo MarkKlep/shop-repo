@@ -2,8 +2,8 @@
 
 <app-table
     [items]="invoices" 
+    [totalLength]="invoicesLength"
     [config]="config"
-    [isLoading]="fetchingItems$.getValue()"
     (fetchItems)="getInvoices($event)"
 >
 </app-table>

@@ -9,22 +9,19 @@ export class PaginationComponent {
   constructor() { }
 
   currentPage = 1;
-  pageSize = 0;
+  pageSize = 5;
   totalPages = 0;
 
-  @Input() pagination: any = null;
-  @Input() totalItems: number = 0;
+  @Input() totalLength = 0;
 
-  @Output() fetchCurrentPage = new EventEmitter<number>();
+  @Output() pageChange = new EventEmitter<number>();
 
-  ngOnInit() {
-    this.currentPage = this.pagination.currentPage;
-    this.pageSize = this.pagination.pageSize;
-    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+  ngOnChanges() {
+    this.totalPages = Math.ceil(this.totalLength / this.pageSize);
   }
   
   setPage(currentPage: number) {
     this.currentPage = currentPage;
-    this.fetchCurrentPage.emit(this.currentPage);
+    this.pageChange.emit(currentPage);
   }
 }

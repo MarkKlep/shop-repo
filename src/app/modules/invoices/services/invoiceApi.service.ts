@@ -1,57 +1,60 @@
 import { Injectable } from '@angular/core';
-import { delay, map, Observable, of, tap } from 'rxjs';
+import { delay, map, Observable, of } from 'rxjs';
 import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.enum';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
-
-interface TableFilters {
-  number: string;
-  numberSign: FilterSignEnum;
-  name: string;
-  date: string;
-  dateSign: FilterSignEnum;
-  status: string;
-}
+import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TableService {
+export class InvoiceApiService {
   constructor() { }
 
-  getInvoices(filters: TableFilters, sortOptions: any, pagination: any): Observable<Invoice[]> {
-    const storedInvoices =  of(localStorage.getItem('invoices')).pipe(
+  getInvoices(filters: TableFilters, sortOptions?: any, currentPage?: number): Observable<{ items: Invoice[]; amountOfItems: number }> {
+    let totalLength = 0;
+    
+    const storedInvoices = of(localStorage.getItem('invoices')).pipe(
       delay(1000),
       map(invoices => {
         const parsedInvoices: Invoice[] = invoices ? JSON.parse(invoices) : [];
+
+        totalLength = parsedInvoices.length;
+
         return parsedInvoices.map(invoice => ({
           ...invoice,
           image: atob(invoice.image)
         }));
       })
     );
-    
+  
     const filteredInvoices = storedInvoices.pipe(
       map((invoices) => {
         if (!filters) return invoices;
-
         return this.filterItems(invoices, filters);
       }),
-      map((invoices) => {
-        if(!sortOptions) return invoices;
-
-        const { headerType, isAscending } = sortOptions;
-
-        return invoices.sort(this.sortBy(headerType, isAscending));        
-      }),
-      map((invoices) => {
-        if (!pagination) return invoices;
-        const { currentPage } = pagination;
-
-        return this.goToPage(invoices, currentPage);
-      })
     );
-
-    return filteredInvoices;
+  
+    const sortedInvoices = filteredInvoices.pipe(
+      map((invoices) => {
+        if (!sortOptions) return invoices;
+  
+        const { headerType, isAscending } = sortOptions;
+  
+        return invoices.sort(this.sortBy(headerType, isAscending));
+      }),
+    );
+  
+    const paginatedInvoices = sortedInvoices.pipe(
+      map((invoices) => {
+        const paginated = currentPage ? this.goToPage(invoices, currentPage) : this.goToPage(invoices, 1);
+        return {
+          items: paginated,
+          amountOfItems: totalLength,
+        };
+      }),
+    );
+  
+    return paginatedInvoices;
   }
 
   private filterItems(items: Invoice[], filters: TableFilters): Invoice[] {
