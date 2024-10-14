@@ -84,7 +84,10 @@ export class TableComponent {
 
     this.fetchItems.emit({
       filters: this.filters,
-      sortOptions: { headerType, isAscending },
+      sortOptions: { 
+        headerType, 
+        isAscending 
+      },
       currentPage: this.currentPage,
     });
   }
