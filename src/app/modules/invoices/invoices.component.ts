@@ -19,23 +19,30 @@ export class InvoicesComponent {
 
   readonly config: TableHeader[] = [
     {
-      label: 'Invoice ID', type: HeaderTypes.NUMBER,
+      label: 'Invoice ID', 
+      type: HeaderTypes.NUMBER,
       options: [
         FilterSignEnum.EQUALS,
         FilterSignEnum.LESS,
         FilterSignEnum.MORE
       ],
     },
-    { label: 'Name', type: HeaderTypes.NAME },
+    { 
+      label: 'Name', 
+      type: HeaderTypes.NAME 
+    },
     {
-      label: 'Date', type: HeaderTypes.DATE, options: [
+      label: 'Date', 
+      type: HeaderTypes.DATE, 
+      options: [
         FilterSignEnum.EQUALS,
         FilterSignEnum.LESS,
         FilterSignEnum.MORE
       ],
     },
     {
-      label: 'Status', type: HeaderTypes.STATUS,
+      label: 'Status', 
+      type: HeaderTypes.STATUS,
       options: [
         InvoiceStatus.CANCELLED,
         InvoiceStatus.CREATED,
