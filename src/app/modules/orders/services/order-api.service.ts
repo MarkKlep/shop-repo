@@ -10,13 +10,7 @@ import { TableFilters } from 'src/app/core/models/table/table-filters.interface'
 export class OrderApiService {
   constructor() { }
 
-  private fethedItemsLength = 0;
-
-  getFetchedItemsLength(): number {
-    return this.fethedItemsLength;
-  }
-
-  getOrders(filters: any, currentPage: number, sortOptions: any): Observable<Order[]> {
+  getOrders(filters: any, currentPage: number, sortOptions: any): Observable<{orders: Order[], totalLength: number}> {
     const storedOrders = of(localStorage.getItem('orders')).pipe(
       delay(1000),
       map(orders => {
@@ -25,10 +19,12 @@ export class OrderApiService {
       })
     );
 
+    let totalLength = 0;
+
     const filteredOrders = storedOrders.pipe(
       map((orders) => {
         const filtered = this.filterItems(orders, filters);
-        this.fethedItemsLength = filtered.length;
+        totalLength = filtered.length;
         return filtered;
       }),
     );
@@ -47,7 +43,11 @@ export class OrderApiService {
       }),
     );
 
-    return paginatedOrders;
+    return paginatedOrders.pipe(
+      map((orders) => {
+        return { orders, totalLength };
+      }),
+    );
   }
 
   private filterItems(items: Order[], filters: TableFilters): Order[] {

@@ -38,9 +38,9 @@ export class OrdersComponent {
     const sortOptions = requestOptions.sortOptions;
     const currentPage = requestOptions.currentPage;
 
-    this.orderApi.getOrders(filters, currentPage, sortOptions).subscribe((dbOrders: Order[]) => {
-      this.orders = dbOrders;
-      this.ordersLength = this.orderApi.getFetchedItemsLength();
+    this.orderApi.getOrders(filters, currentPage, sortOptions).subscribe((dbData) => {
+      this.orders = dbData.orders;
+      this.ordersLength = dbData.totalLength;
     });
   }
 }

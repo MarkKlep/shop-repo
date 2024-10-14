@@ -56,10 +56,9 @@ export class InvoicesComponent {
     const sortOptions = requestOptions.sortOptions as TableSorting;
     const currentPage = requestOptions.currentPage as number;
 
-    this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbInvoices) => {
-      console.log(dbInvoices);
-      this.invoices = dbInvoices;
-      this.invoicesLength = this.invoiceApi.getFetchedItemsLength();
+    this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbData) => {
+      this.invoices = dbData.invoices;
+      this.invoicesLength = dbData.totalLength;
     });
   }
 }
