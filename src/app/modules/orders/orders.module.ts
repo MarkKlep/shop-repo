@@ -4,6 +4,7 @@ import { OrdersComponent } from './orders.component';
 import { RouterModule } from '@angular/router';
 import { OrdersroutingModule } from './orders-routing.module';
 import { PanelModule } from 'src/app/core/panel/panel.module';
+import { TableModule } from 'src/app/shared/table/table.module';
 
 
 
@@ -15,7 +16,8 @@ import { PanelModule } from 'src/app/core/panel/panel.module';
     CommonModule,
     RouterModule,
     OrdersroutingModule,
-    PanelModule
+    PanelModule,
+    TableModule
   ]
 })
 export class OrdersModule { }

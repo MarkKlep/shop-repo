@@ -7,5 +7,4 @@ export interface Invoice {
     date: string;
     status: InvoiceStatus;
     image: string;
-    [index: string | InvoiceStatus]: string;
 }

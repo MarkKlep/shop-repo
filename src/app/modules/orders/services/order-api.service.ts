@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { delay, map, Observable, of } from 'rxjs';
 import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
-import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
+import { Order } from 'src/app/core/models/order/order.interface';
 import { TableFilters } from 'src/app/core/models/table/table-filters.interface';
-import { TableSorting } from 'src/app/core/models/table/table-sorting.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class InvoiceApiService {
+export class OrderApiService {
   constructor() { }
 
   private fethedItemsLength = 0;
@@ -17,44 +16,41 @@ export class InvoiceApiService {
     return this.fethedItemsLength;
   }
 
-  getInvoices(filters: TableFilters, currentPage: number, sortOptions: TableSorting): Observable<Invoice[]> {
-    const storedInvoices = of(localStorage.getItem('invoices')).pipe(
+  getOrders(filters: any, currentPage: number, sortOptions: any): Observable<Order[]> {
+    const storedOrders = of(localStorage.getItem('orders')).pipe(
       delay(1000),
-      map(invoices => {
-        const parsedInvoices: Invoice[] = invoices ? JSON.parse(invoices) : [];
-        return parsedInvoices.map(invoice => ({
-          ...invoice,
-          image: atob(invoice.image)
-        }));
+      map(orders => {
+        const parsedOrders = orders ? JSON.parse(orders) : [];
+        return parsedOrders;
       })
     );
-  
-    const filteredInvoices = storedInvoices.pipe(
-      map((invoices) => {
-        const filtered = this.filterItems(invoices, filters);
+
+    const filteredOrders = storedOrders.pipe(
+      map((orders) => {
+        const filtered = this.filterItems(orders, filters);
         this.fethedItemsLength = filtered.length;
         return filtered;
       }),
     );
-  
-    const sortedInvoices = filteredInvoices.pipe(
-      map((invoices) => {
+
+    const sortedOrders = filteredOrders.pipe(
+      map((orders) => {
         const { headerType, isAscending } = sortOptions;
-        if (!headerType) return invoices;
-        return invoices.sort(this.sortBy(headerType, isAscending));
+        if (!headerType) return orders;
+        return orders.sort(this.sortBy(headerType, isAscending));
       }),
     );
-  
-    const paginatedInvoices = sortedInvoices.pipe(
-      map((invoices) => {
-        return this.goToPage(invoices, currentPage);
+
+    const paginatedOrders = sortedOrders.pipe(
+      map((orders) => {
+        return this.goToPage(orders, currentPage);
       }),
     );
-  
-    return paginatedInvoices;
+
+    return paginatedOrders;
   }
 
-  private filterItems(items: Invoice[], filters: TableFilters): Invoice[] {
+  private filterItems(items: Order[], filters: TableFilters): Order[] {
     let filteredItems = items;
 
     const { number, numberSign, name, date, dateSign, status } = filters;
@@ -108,7 +104,7 @@ export class InvoiceApiService {
     }
   }
 
-  private goToPage(items: Invoice[], currentPage: number): Invoice[] {
+  private goToPage(items: Order[], currentPage: number): Order[] {
     const pageSize = 5;
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;

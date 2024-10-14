@@ -1,2 +1,9 @@
 <app-panel></app-panel>
-<h1>Orders</h1>
+
+<app-table
+    [headers]="config"
+    [items]="orders"
+    [totalLength]="ordersLength"
+    (fetchItems)="getOrders($event)"
+>
+</app-table>

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { InvoiceApiService } from './services/invoiceApi.service';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
-import { FilterSignEnum } from 'src/app/core/models/invoice/filter/filter-sign.enum';
-import { HeaderTypes } from 'src/app/core/models/invoice/table/header-types.enum';
-import { TableFilters } from 'src/app/core/models/invoice/table/table-filters.interface';
-import { TableHeader } from 'src/app/core/models/invoice/table/table-header.interface';
+import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
+import { HeaderTypes } from 'src/app/core/models/table/header-types.enum';
+import { TableFilters } from 'src/app/core/models/table/table-filters.interface';
+import { TableHeader } from 'src/app/core/models/table/table-header.interface';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
-import { TableSorting } from 'src/app/core/models/invoice/table/table-sorting.interface';
+import { TableSorting } from 'src/app/core/models/table/table-sorting.interface';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class InvoicesComponent {
   constructor(private invoiceApi: InvoiceApiService) { }
 
   readonly config: TableHeader[] = [
-    { label: 'Number', type: HeaderTypes.NUMBER, options: [
+    { label: 'Invoice ID', type: HeaderTypes.NUMBER, options: [
       FilterSignEnum.EQUALS,
       FilterSignEnum.LESS,
       FilterSignEnum.MORE
@@ -39,7 +39,7 @@ export class InvoicesComponent {
   ];
 
   invoices: Invoice[] = [];
-  totalLength = 0;
+  invoicesLength = 0;
 
   getInvoices(requestOptions: any) {
     const filters = requestOptions .filters as TableFilters;
@@ -47,8 +47,9 @@ export class InvoicesComponent {
     const currentPage = requestOptions.currentPage as number;
 
     this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbInvoices) => {
+      console.log(dbInvoices);
       this.invoices = dbInvoices;
-      this.totalLength = this.invoiceApi.getFetchedItemsLength();
+      this.invoicesLength = this.invoiceApi.getFetchedItemsLength();
     });
   }
 }
