@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { TableHeader } from 'src/app/core/models/table/table-header.interface';
 import { HeaderTypes } from 'src/app/core/models/table/header-types.enum';
 import { TableFilters } from 'src/app/core/models/table/table-filters.interface';
@@ -48,8 +48,10 @@ export class TableComponent {
     });
   }
 
-  ngOnChanges() {
-    this.isLoading = false;
+  ngOnChanges(changes: SimpleChanges) {
+    if('items' in changes) {
+      this.isLoading = false;
+    }
   }
 
   getValue(item: any, headerType: string) {
