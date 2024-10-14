@@ -16,18 +16,37 @@ export class OrdersComponent {
   constructor(private orderApi: OrderApiService) { }
 
   readonly config: TableHeader[] = [
-    { label: 'Order ID', type: HeaderTypes.NUMBER, options: [
-      FilterSignEnum.EQUALS,
-      FilterSignEnum.LESS,
-      FilterSignEnum.MORE
-    ] },
-    { label: 'Creation Date', type: HeaderTypes.DATE, options: [
-      FilterSignEnum.EQUALS,
-      FilterSignEnum.LESS,
-      FilterSignEnum.MORE
-    ] },
-    { label: 'User Name', type: HeaderTypes.NAME },
-    { label: 'Status', type: HeaderTypes.STATUS, options: [OrderStatus.DONE, OrderStatus.IN_PROGRESS, OrderStatus.WAITING] }
+    {
+      label: 'Order ID',
+      type: HeaderTypes.NUMBER,
+      options: [
+        FilterSignEnum.EQUALS,
+        FilterSignEnum.LESS,
+        FilterSignEnum.MORE
+      ]
+    },
+    {
+      label: 'Creation Date',
+      type: HeaderTypes.DATE,
+      options: [
+        FilterSignEnum.EQUALS,
+        FilterSignEnum.LESS,
+        FilterSignEnum.MORE
+      ]
+    },
+    {
+      label: 'User Name',
+      type: HeaderTypes.NAME
+    },
+    {
+      label: 'Status',
+      type: HeaderTypes.STATUS,
+      options: [
+        OrderStatus.DONE,
+        OrderStatus.IN_PROGRESS,
+        OrderStatus.WAITING
+      ]
+    }
   ];
 
   orders: Order[] = [];
