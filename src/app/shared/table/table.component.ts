@@ -10,7 +10,7 @@ import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent {
-  constructor() {}
+  constructor() { }
 
   filters: TableFilters = {
     number: '',
@@ -41,7 +41,10 @@ export class TableComponent {
     this.fetchItems.emit({
       filters: this.filters,
       currentPage: this.currentPage,
-      sortOptions: {headerType: this.headerType, isAscending: this.isAscending},
+      sortOptions: {
+        headerType: this.headerType,
+        isAscending: this.isAscending
+      },
     });
   }
 
@@ -58,12 +61,18 @@ export class TableComponent {
     const { name, value } = target;
 
     this.isLoading = true;
-    this.filters = { ...this.filters, [name]: value };
+    this.filters = {
+      ...this.filters,
+      [name]: value
+    };
 
     this.fetchItems.emit({
       filters: this.filters,
       currentPage: this.currentPage,
-      sortOptions: {headerType: this.headerType, isAscending: this.isAscending},
+      sortOptions: {
+        headerType: this.headerType,
+        isAscending: this.isAscending
+      },
     });
   }
 
@@ -75,7 +84,7 @@ export class TableComponent {
 
     this.fetchItems.emit({
       filters: this.filters,
-      sortOptions: {headerType, isAscending},
+      sortOptions: { headerType, isAscending },
       currentPage: this.currentPage,
     });
   }
@@ -86,7 +95,10 @@ export class TableComponent {
 
     this.fetchItems.emit({
       filters: this.filters,
-      sortOptions: {headerType: this.headerType, isAscending: this.isAscending},
+      sortOptions: {
+        headerType: this.headerType,
+        isAscending: this.isAscending
+      },
       currentPage,
     });
   }
@@ -107,7 +119,10 @@ export class TableComponent {
     this.fetchItems.emit({
       filters: this.filters,
       currentPage: this.currentPage,
-      sortOptions: {headerType: this.headerType, isAscending: this.isAscending},
+      sortOptions: {
+        headerType: this.headerType,
+        isAscending: this.isAscending
+      },
     });
   }
 }
