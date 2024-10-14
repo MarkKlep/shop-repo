@@ -14,35 +14,45 @@ import { TableSorting } from 'src/app/core/models/table/table-sorting.interface'
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.scss']
 })
-export class InvoicesComponent { 
+export class InvoicesComponent {
   constructor(private invoiceApi: InvoiceApiService) { }
 
   readonly config: TableHeader[] = [
-    { label: 'Invoice ID', type: HeaderTypes.NUMBER, options: [
-      FilterSignEnum.EQUALS,
-      FilterSignEnum.LESS,
-      FilterSignEnum.MORE
-    ], },
-    { label: 'Name', type: HeaderTypes.NAME },
-    { label: 'Date', type: HeaderTypes.DATE, options: [
-      FilterSignEnum.EQUALS,
-      FilterSignEnum.LESS,
-      FilterSignEnum.MORE
-    ], },
-    { label: 'Status', type: HeaderTypes.STATUS, 
+    {
+      label: 'Invoice ID', type: HeaderTypes.NUMBER,
       options: [
-      InvoiceStatus.CANCELLED,
-      InvoiceStatus.CREATED,
-      InvoiceStatus.PAID
-    ] },
-    { label: 'Image', type: HeaderTypes.IMAGE }
+        FilterSignEnum.EQUALS,
+        FilterSignEnum.LESS,
+        FilterSignEnum.MORE
+      ],
+    },
+    { label: 'Name', type: HeaderTypes.NAME },
+    {
+      label: 'Date', type: HeaderTypes.DATE, options: [
+        FilterSignEnum.EQUALS,
+        FilterSignEnum.LESS,
+        FilterSignEnum.MORE
+      ],
+    },
+    {
+      label: 'Status', type: HeaderTypes.STATUS,
+      options: [
+        InvoiceStatus.CANCELLED,
+        InvoiceStatus.CREATED,
+        InvoiceStatus.PAID
+      ]
+    },
+    { 
+      label: 'Image', 
+      type: HeaderTypes.IMAGE 
+    }
   ];
 
   invoices: Invoice[] = [];
   invoicesLength = 0;
 
   getInvoices(requestOptions: any) {
-    const filters = requestOptions .filters as TableFilters;
+    const filters = requestOptions.filters as TableFilters;
     const sortOptions = requestOptions.sortOptions as TableSorting;
     const currentPage = requestOptions.currentPage as number;
 
