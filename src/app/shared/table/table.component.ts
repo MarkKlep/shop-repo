@@ -19,15 +19,15 @@ export class TableComponent {
     name: '',
     date: '',
     dateSign: FilterSignEnum.EQUALS,
-    status: 'All',
+    status: '',
   };
 
   HeaderTypes = HeaderTypes;
   FilterSignEnum = FilterSignEnum;
 
+  @Input() headers: TableHeader[] = [];
   @Input() items: Invoice[] = [];
   @Input() totalLength = 0;
-  @Input() headers: TableHeader[] = [];
 
   @Output() fetchItems = new EventEmitter<any>();
 
@@ -42,6 +42,7 @@ export class TableComponent {
     this.fetchItems.emit({
       filters: this.filters,
       currentPage: this.currentPage,
+      sortOptions: {headerType: this.headerType, isAscending: this.isAscending},
     });
   }
 
@@ -63,6 +64,7 @@ export class TableComponent {
     this.fetchItems.emit({
       filters: this.filters,
       currentPage: this.currentPage,
+      sortOptions: {headerType: this.headerType, isAscending: this.isAscending},
     });
   }
 
@@ -87,6 +89,26 @@ export class TableComponent {
       filters: this.filters,
       sortOptions: {headerType: this.headerType, isAscending: this.isAscending},
       currentPage,
+    });
+  }
+
+  resetFilters() {
+    this.isLoading = true;
+    this.filters = {
+      number: '',
+      numberSign: FilterSignEnum.EQUALS,
+      name: '',
+      date: '',
+      dateSign: FilterSignEnum.EQUALS,
+      status: '',
+    };
+
+    this.headerType = '';
+
+    this.fetchItems.emit({
+      filters: this.filters,
+      currentPage: this.currentPage,
+      sortOptions: {headerType: this.headerType, isAscending: this.isAscending},
     });
   }
 }

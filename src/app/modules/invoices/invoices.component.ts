@@ -19,14 +19,12 @@ export class InvoicesComponent {
 
   readonly config: TableHeader[] = [
     { label: 'Number', type: HeaderTypes.NUMBER, options: [
-      FilterSignEnum.ALL,
       FilterSignEnum.EQUALS,
       FilterSignEnum.LESS,
       FilterSignEnum.MORE
     ], },
     { label: 'Name', type: HeaderTypes.NAME },
     { label: 'Date', type: HeaderTypes.DATE, options: [
-      FilterSignEnum.ALL,
       FilterSignEnum.EQUALS,
       FilterSignEnum.LESS,
       FilterSignEnum.MORE
@@ -41,7 +39,7 @@ export class InvoicesComponent {
   ];
 
   invoices: Invoice[] = [];
-  invoicesLength = 0;
+  totalLength = 0;
 
   getInvoices(requestOptions: any) {
     const filters = requestOptions .filters as TableFilters;
@@ -50,7 +48,7 @@ export class InvoicesComponent {
 
     this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbInvoices) => {
       this.invoices = dbInvoices;
-      this.invoicesLength = this.invoiceApi.getFetchedInvoicesCount();
+      this.totalLength = this.invoiceApi.getFetchedItemsLength();
     });
   }
 }

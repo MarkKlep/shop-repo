@@ -11,13 +11,13 @@ import { TableSorting } from 'src/app/core/models/invoice/table/table-sorting.in
 export class InvoiceApiService {
   constructor() { }
 
-  private fetchedLength = 0;
+  private fetchedItemsLength = 0;
 
-  getFetchedInvoicesCount(): number {
-    return this.fetchedLength;;
+  getFetchedItemsLength(): number {
+    return this.fetchedItemsLength;
   }
 
-  getInvoices(filters: TableFilters, currentPage: number, sortOptions?: TableSorting): Observable<Invoice[]> {
+  getInvoices(filters: TableFilters, currentPage: number, sortOptions: TableSorting): Observable<Invoice[]> {
     const storedInvoices = of(localStorage.getItem('invoices')).pipe(
       delay(1000),
       map(invoices => {
@@ -32,16 +32,15 @@ export class InvoiceApiService {
     const filteredInvoices = storedInvoices.pipe(
       map((invoices) => {
         const filtered = this.filterItems(invoices, filters);
-        this.fetchedLength = filtered.length;
+        this.fetchedItemsLength = filtered.length;
         return filtered;
       }),
     );
   
     const sortedInvoices = filteredInvoices.pipe(
       map((invoices) => {
-        if (!sortOptions) return invoices;
-  
         const { headerType, isAscending } = sortOptions;
+        if (!headerType) return invoices;
         return invoices.sort(this.sortBy(headerType, isAscending));
       }),
     );
@@ -92,7 +91,7 @@ export class InvoiceApiService {
       }
     }
 
-    if (status !== 'All') {
+    if (status) {
       filteredItems = filteredItems.filter(item => item.status === status);
     }
 

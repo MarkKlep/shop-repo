@@ -87,11 +87,22 @@
                     name="status"
                     (change)="filterItems($event)"
                   >
-                    <option selected value="All">All</option>
                     <option *ngFor="let status of header.options" [value]="status">
                       {{ status }}
                     </option>
                   </select>
+                </div>
+
+                <div
+                  *ngSwitchCase="HeaderTypes.IMAGE"
+                  class="d-flex align-items-center mb-3"
+                >
+                  <button 
+                    class="btn btn-secondary ms-2"
+                    (click)="resetFilters()"
+                  >
+                    Reset
+                  </button>
                 </div>
               </div>
             </th>
