@@ -18,6 +18,7 @@ export class OrdersComponent {
   readonly config: TableHeader[] = [
     {
       label: 'Order ID',
+      field: 'id',
       type: HeaderTypes.NUMBER,
       options: [
         FilterSignEnum.EQUALS,
@@ -27,6 +28,7 @@ export class OrdersComponent {
     },
     {
       label: 'Creation Date',
+      field: 'date',
       type: HeaderTypes.DATE,
       options: [
         FilterSignEnum.EQUALS,
@@ -36,10 +38,12 @@ export class OrdersComponent {
     },
     {
       label: 'User Name',
+      field: 'name',
       type: HeaderTypes.NAME
     },
     {
       label: 'Status',
+      field: 'status',
       type: HeaderTypes.STATUS,
       options: [
         OrderStatus.DONE,

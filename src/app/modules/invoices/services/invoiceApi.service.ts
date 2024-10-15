@@ -62,13 +62,13 @@ export class InvoiceApiService {
     if (number) {
       switch(numberSign) {
         case FilterSignEnum.EQUALS:
-          filteredItems = filteredItems.filter(item => item.number === number);
+          filteredItems = filteredItems.filter(item => item.id === number);
           break;
         case FilterSignEnum.LESS:
-          filteredItems = filteredItems.filter(item => item.number < number);
+          filteredItems = filteredItems.filter(item => item.id < number);
           break;
         case FilterSignEnum.MORE:
-          filteredItems = filteredItems.filter(item => item.number > number);
+          filteredItems = filteredItems.filter(item => item.id > number);
           break;
       }
     }

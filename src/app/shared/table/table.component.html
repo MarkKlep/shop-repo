@@ -1,86 +1,89 @@
-<table class="table table-bordered mt-3 ">
-  <thead class="table-default">
-    <tr>
-      <th colspan="4" class="text-end">
-        <button 
-          (click)="resetFilters()" 
-          class="btn btn-secondary"
-        >
-          Clear all filters
-        </button>
-      </th>
-    </tr>
-    <tr class="table-light">
-      <th *ngFor="let header of headers" class="text-nowrap">
-        <div [ngSwitch]="header.type">
-          <div *ngSwitchCase="HeaderTypes.NUMBER" class="d-flex align-items-center mb-3">
-            <div class="me-2">
-              <input type="number" class="form-control" placeholder="Number..." name="number"
-                (keyup)="filterItems($event)">
+<div class="t-con">
+  <table class="table table-bordered mt-3 ">
+    <thead class="table-default">
+      <tr>
+        <th colspan="headers.length">
+          <div class="reset-btn">
+            <button (click)="resetFilters()" class="btn btn-danger">
+              Clear all filters
+            </button>
+          </div>
+        </th>
+      </tr>
+      <tr class="table-light">
+        <th *ngFor="let header of headers" class="text-nowrap">
+          <div [ngSwitch]="header.type">
+            <div *ngSwitchCase="HeaderTypes.NUMBER">
+              <div class="me-2">
+                <input type="number" class="form-control" [placeholder]="header.field+'...'" name="number"
+                  (keyup)="filterItems($event)">
+              </div>
+              <div>
+                <select class="form-select" name="numberSign" (change)="filterItems($event)">
+                  <option *ngFor="let sign of header.options" [value]="sign"
+                    [selected]="sign === FilterSignEnum.EQUALS">
+                    {{ sign }}
+                  </option>
+                </select>
+              </div>
             </div>
-            <div>
-              <select class="form-select" name="numberSign" (change)="filterItems($event)">
-                <option *ngFor="let sign of header.options" [value]="sign" [selected]="sign === FilterSignEnum.EQUALS">
-                  {{ sign }}
+
+            <div *ngSwitchCase="HeaderTypes.NAME">
+              <div>
+                <input type="text" class="form-control" [placeholder]="header.field+'...'" name="name" (keyup)="filterItems($event)">
+              </div>
+            </div>
+
+            <div *ngSwitchCase="HeaderTypes.DATE">
+              <div class="me-2">
+                <input type="date" class="form-select" name="date" (change)="filterItems($event)">
+              </div>
+
+              <div>
+                <select class="form-select" name="dateSign" (change)="filterItems($event)">
+                  <option *ngFor="let sign of header.options" [value]="sign"
+                    [selected]="sign === FilterSignEnum.EQUALS">
+                    {{ sign }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div *ngSwitchCase="HeaderTypes.STATUS">
+              <select class="form-select" name="status" (change)="filterItems($event)">
+                <option *ngFor="let status of header.options" [value]="status">
+                  {{ status }}
                 </option>
               </select>
             </div>
           </div>
-
-          <div *ngSwitchCase="HeaderTypes.NAME" class="d-flex align-items-center mb-3">
+        </th>
+      </tr>
+      <tr class="table-light">
+        <th *ngFor="let header of headers" style="vertical-align: bottom;">
+          <div class="d-flex justify-content-between align-items-end" style="height: 100%;">
+            <p class="mb-0">{{ header.label }}</p>
             <div>
-              <input type="text" class="form-control" placeholder="Name..." name="name" (keyup)="filterItems($event)">
+              <button *ngIf=" header.label !== 'Image'" class="btn btn-link" (click)="sortBy(header, true)">
+                &#8593;
+              </button>
+              <button *ngIf=" header.label !== 'Image'" class="btn btn-link" (click)="sortBy(header, false)">
+                &#8595;
+              </button>
             </div>
           </div>
-
-          <div *ngSwitchCase="HeaderTypes.DATE" class="d-flex align-items-center mb-3">
-            <div class="me-2">
-              <input type="date" class="form-select" name="date" (change)="filterItems($event)">
-            </div>
-
-            <div>
-              <select class="form-select" name="dateSign" (change)="filterItems($event)">
-                <option *ngFor="let sign of header.options" [value]="sign" [selected]="sign === FilterSignEnum.EQUALS">
-                  {{ sign }}
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <div *ngSwitchCase="HeaderTypes.STATUS" class="d-flex align-items-center mb-3">
-            <select class="form-select" name="status" (change)="filterItems($event)">
-              <option *ngFor="let status of header.options" [value]="status">
-                {{ status }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </th>
-    </tr>
-    <tr class="table-light">
-      <th *ngFor="let header of headers" style="vertical-align: bottom;">
-        <div class="d-flex justify-content-between align-items-end" style="height: 100%;">
-          <p class="mb-0">{{ header.label }}</p>
-          <div>
-            <button *ngIf=" header.label !== 'Image'" class="btn btn-link" (click)="sortBy(header, true)">
-              &#8593;
-            </button>
-            <button *ngIf=" header.label !== 'Image'" class="btn btn-link" (click)="sortBy(header, false)">
-              &#8595;
-            </button>
-          </div>
-        </div>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of items">
-      <td *ngFor="let header of headers">
-        {{getValue(item, header.type)}}
-      </td>
-    </tr>
-  </tbody>
-</table>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items">
+        <td *ngFor="let header of headers">
+          {{getValue(item, header.field) }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <app-pagination [totalLength]="totalLength" (pageChange)="setPage($event)"></app-pagination>
 

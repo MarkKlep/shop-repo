@@ -54,8 +54,8 @@ export class TableComponent {
     }
   }
 
-  getValue(item: any, headerType: string) {
-    return item[headerType];
+  getValue(item: any, headerField: string) {
+    return item[headerField];
   }
 
   filterItems(event: Event) {
