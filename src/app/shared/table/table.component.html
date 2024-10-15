@@ -15,7 +15,7 @@
           <div [ngSwitch]="header.type">
             <div *ngSwitchCase="HeaderTypes.NUMBER">
               <div class="me-2">
-                <input type="number" class="form-control" [placeholder]="header.field+'...'" name="number"
+                <input type="number" class="form-control" [placeholder]="header.field+'...'"
                   (keyup)="filterItems($event)">
               </div>
               <div>
