@@ -50,45 +50,44 @@ export class OrderApiService {
     );
   }
 
-  private filterItems(items: Order[], filters: TableFilters): Order[] {
+  private filterItems(items: Order[], filters: any): Order[] {
     let filteredItems = items;
 
-    const { number, numberSign, name, date, dateSign, status } = filters;
+    for (const key in filters) {
+      const filter = filters[key];
+      if (filter) {
+        const { value, sign } = filter;
 
-    if (number) {
-      switch(numberSign) {
-        case FilterSignEnum.EQUALS:
-          filteredItems = filteredItems.filter(item => item.id === number);
-          break;
-        case FilterSignEnum.LESS:
-          filteredItems = filteredItems.filter(item => item.id < number);
-          break;
-        case FilterSignEnum.MORE:
-          filteredItems = filteredItems.filter(item => item.id > number);
-          break;
+        if (key === 'Invoice ID' && value) {
+          switch (sign) {
+            case FilterSignEnum.EQUALS:
+              filteredItems = filteredItems.filter(item => item.id === value);
+              break;
+            case FilterSignEnum.LESS:
+              filteredItems = filteredItems.filter(item => parseInt(item.id) < parseInt(value));
+              break;
+            case FilterSignEnum.MORE:
+              filteredItems = filteredItems.filter(item => parseInt(item.id) > parseInt(value));
+              break;
+          }
+        } else if (key === 'Name' && value) {
+          filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(value.toLowerCase()));
+        } else if (key === 'Date' && value) {
+          switch (sign) {
+            case FilterSignEnum.EQUALS:
+              filteredItems = filteredItems.filter(item => item.date === value);
+              break;
+            case FilterSignEnum.LESS:
+              filteredItems = filteredItems.filter(item => new Date(item.date) < new Date(value));
+              break;
+            case FilterSignEnum.MORE:
+              filteredItems = filteredItems.filter(item => new Date(item.date) > new Date(value));
+              break;
+          }
+        } else if (key === 'Status' && value) {
+          filteredItems = filteredItems.filter(item => item.status === value);
+        }
       }
-    }
-
-    if (name) {
-      filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(name.toLowerCase()));
-    }
-
-    if (date) {
-      switch(dateSign) {
-        case FilterSignEnum.EQUALS:
-          filteredItems = filteredItems.filter(item => item.date === date);
-          break;
-        case FilterSignEnum.LESS:
-          filteredItems = filteredItems.filter(item => item.date < date);
-          break;
-        case FilterSignEnum.MORE:
-          filteredItems = filteredItems.filter(item => item.date > date);
-          break;
-      }
-    }
-
-    if (status) {
-      filteredItems = filteredItems.filter(item => item.status === status);
     }
 
     return filteredItems;
