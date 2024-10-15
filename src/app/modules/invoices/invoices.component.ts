@@ -19,7 +19,7 @@ export class InvoicesComponent {
 
   readonly config: TableHeader[] = [
     {
-      label: 'Invoice ID',
+      label: 'ID',
       field: 'id',
       type: HeaderTypes.NUMBER,
       options: [

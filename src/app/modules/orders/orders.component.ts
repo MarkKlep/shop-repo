@@ -17,7 +17,7 @@ export class OrdersComponent {
 
   readonly config: TableHeader[] = [
     {
-      label: 'Order ID',
+      label: 'ID',
       field: 'id',
       type: HeaderTypes.NUMBER,
       options: [
@@ -27,7 +27,7 @@ export class OrdersComponent {
       ]
     },
     {
-      label: 'Creation Date',
+      label: 'Date',
       field: 'date',
       type: HeaderTypes.DATE,
       options: [
@@ -37,7 +37,7 @@ export class OrdersComponent {
       ]
     },
     {
-      label: 'User Name',
+      label: 'Name',
       field: 'name',
       type: HeaderTypes.NAME
     },

@@ -62,7 +62,7 @@ export class InvoiceApiService {
         if (filter) {
             const { value, sign } = filter;
 
-            if (key === 'Invoice ID' && value) {
+            if (key === 'ID' && value) {
                 switch (sign) {
                     case FilterSignEnum.EQUALS:
                         filteredItems = filteredItems.filter(item => item.id === value);
