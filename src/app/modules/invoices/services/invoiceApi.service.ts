@@ -97,51 +97,6 @@ export class InvoiceApiService {
     return filteredItems;
 }
 
-
-  // private filterItems(items: Invoice[], filters: TableFilters): Invoice[] {
-  //   let filteredItems = items;
-
-  //   const { number, numberSign, name, date, dateSign, status } = filters;
-
-  //   if (number) {
-  //     switch(numberSign) {
-  //       case FilterSignEnum.EQUALS:
-  //         filteredItems = filteredItems.filter(item => item.id === number);
-  //         break;
-  //       case FilterSignEnum.LESS:
-  //         filteredItems = filteredItems.filter(item => item.id < number);
-  //         break;
-  //       case FilterSignEnum.MORE:
-  //         filteredItems = filteredItems.filter(item => item.id > number);
-  //         break;
-  //     }
-  //   }
-
-  //   if (name) {
-  //     filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(name.toLowerCase()));
-  //   }
-
-  //   if (date) {
-  //     switch(dateSign) {
-  //       case FilterSignEnum.EQUALS:
-  //         filteredItems = filteredItems.filter(item => item.date === date);
-  //         break;
-  //       case FilterSignEnum.LESS:
-  //         filteredItems = filteredItems.filter(item => item.date < date);
-  //         break;
-  //       case FilterSignEnum.MORE:
-  //         filteredItems = filteredItems.filter(item => item.date > date);
-  //         break;
-  //     }
-  //   }
-
-  //   if (status) {
-  //     filteredItems = filteredItems.filter(item => item.status === status);
-  //   }
-
-  //   return filteredItems;
-  // }
-
   private sortBy(headerType: string, isAsccending: boolean) {
     return (a: any, b: any) => {
       if (isAsccending) {
