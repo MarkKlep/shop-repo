@@ -74,7 +74,7 @@ export class InvoicesComponent {
   invoicesLength = 0;
 
   getInvoices(requestOptions: any) {
-    const filters = requestOptions.filters as TableFilters;
+    const filters = requestOptions.filters as any//TableFilters;
     const sortOptions = requestOptions.sortOptions as TableSorting;
     const currentPage = requestOptions.currentPage as number;
 

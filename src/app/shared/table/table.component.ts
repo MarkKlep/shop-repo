@@ -12,14 +12,16 @@ import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
 export class TableComponent {
   constructor() { }
 
-  filters: TableFilters = {
-    number: '',
-    numberSign: FilterSignEnum.EQUALS,
-    name: '',
-    date: '',
-    dateSign: FilterSignEnum.EQUALS,
-    status: '',
-  };
+  // filters: TableFilters = {
+  //   number: '',
+  //   numberSign: FilterSignEnum.EQUALS,
+  //   name: '',
+  //   date: '',
+  //   dateSign: FilterSignEnum.EQUALS,
+  //   status: '',
+  // };
+
+  filters: any = { };
 
   HeaderTypes = HeaderTypes;
   FilterSignEnum = FilterSignEnum;
@@ -37,6 +39,17 @@ export class TableComponent {
   isAscending = false;
 
   ngOnInit() {
+    for (let header of this.headers) {
+      this.filters[header.label] = [];
+      if (header.type === HeaderTypes.STATUS) {
+        this.filters[header.label] = { value: '' };
+      } else if (header.type === HeaderTypes.DATE || header.type === HeaderTypes.NUMBER) {
+        this.filters[header.label] = { value: '', sign: FilterSignEnum.EQUALS };
+      } else if (header.type === HeaderTypes.NAME) {
+        this.filters[header.label] = { value: '' };
+      }
+    }
+
     this.isLoading = true;
     this.fetchItems.emit({
       filters: this.filters,
@@ -58,16 +71,24 @@ export class TableComponent {
     return item[headerField];
   }
 
-  filterItems(event: Event) {
+  filterItems(label: string, event: Event) {
     const target = event.target as HTMLInputElement;
-    const { name, value } = target;
+    const value = target.value;
+    const name = target.name;
+
+    if(name === 'value') {
+      this.filters = {
+        ...this.filters,
+        [label]: { value, sign: this.filters[label].sign },
+      }
+    } else if(name === 'sign') {
+      this.filters = {
+        ...this.filters,
+        [label]: { value: this.filters[label].value, sign: value },
+      }
+    }
 
     this.isLoading = true;
-    this.filters = {
-      ...this.filters,
-      [name]: value
-    };
-
     this.fetchItems.emit({
       filters: this.filters,
       currentPage: this.currentPage,
@@ -109,18 +130,21 @@ export class TableComponent {
   }
 
   resetFilters() {
-    this.isLoading = true;
-    this.filters = {
-      number: '',
-      numberSign: FilterSignEnum.EQUALS,
-      name: '',
-      date: '',
-      dateSign: FilterSignEnum.EQUALS,
-      status: '',
-    };
+    this.filters = { };
+    for (let header of this.headers) {
+      this.filters[header.label] = [];
+      if (header.type === HeaderTypes.STATUS) {
+        this.filters[header.label] = { value: '' };
+      } else if (header.type === HeaderTypes.DATE || header.type === HeaderTypes.NUMBER) {
+        this.filters[header.label] = { value: '', sign: FilterSignEnum.EQUALS };
+      } else if (header.type === HeaderTypes.NAME) {
+        this.filters[header.label] = { value: '' };
+      }
+    }
 
     this.headerType = '';
 
+    this.isLoading = true;
     this.fetchItems.emit({
       filters: this.filters,
       currentPage: this.currentPage,
