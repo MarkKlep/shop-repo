@@ -28,16 +28,6 @@ export class InvoicesComponent {
         FilterSignEnum.MORE
       ],
     },
-    {
-      label: 'Digit',
-      field: 'digit',
-      type: HeaderTypes.NUMBER,
-      options: [
-        FilterSignEnum.EQUALS,
-        FilterSignEnum.LESS,
-        FilterSignEnum.MORE
-      ],
-    },
     { 
       label: 'Name',
       field: 'name',
@@ -74,7 +64,7 @@ export class InvoicesComponent {
   invoicesLength = 0;
 
   getInvoices(requestOptions: any) {
-    const filters = requestOptions.filters as any//TableFilters;
+    const filters = requestOptions.filters as TableFilters;
     const sortOptions = requestOptions.sortOptions as TableSorting;
     const currentPage = requestOptions.currentPage as number;
 
