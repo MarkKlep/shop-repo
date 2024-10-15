@@ -12,16 +12,7 @@ import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
 export class TableComponent {
   constructor() { }
 
-  // filters: TableFilters = {
-  //   number: '',
-  //   numberSign: FilterSignEnum.EQUALS,
-  //   name: '',
-  //   date: '',
-  //   dateSign: FilterSignEnum.EQUALS,
-  //   status: '',
-  // };
-
-  filters: any = { };
+  filters: TableFilters | any = { };
 
   HeaderTypes = HeaderTypes;
   FilterSignEnum = FilterSignEnum;
@@ -42,11 +33,18 @@ export class TableComponent {
     for (let header of this.headers) {
       this.filters[header.label] = [];
       if (header.type === HeaderTypes.STATUS) {
-        this.filters[header.label] = { value: '' };
+        this.filters[header.label] = { 
+          value: '' 
+        };
       } else if (header.type === HeaderTypes.DATE || header.type === HeaderTypes.NUMBER) {
-        this.filters[header.label] = { value: '', sign: FilterSignEnum.EQUALS };
+        this.filters[header.label] = { 
+          value: '', 
+          sign: FilterSignEnum.EQUALS 
+        };
       } else if (header.type === HeaderTypes.NAME) {
-        this.filters[header.label] = { value: '' };
+        this.filters[header.label] = { 
+          value: '' 
+        };
       }
     }
 
@@ -79,12 +77,18 @@ export class TableComponent {
     if(name === 'value') {
       this.filters = {
         ...this.filters,
-        [label]: { value, sign: this.filters[label].sign },
+        [label]: { 
+          value, 
+          sign: this.filters[label].sign 
+        },
       }
     } else if(name === 'sign') {
       this.filters = {
         ...this.filters,
-        [label]: { value: this.filters[label].value, sign: value },
+        [label]: { 
+          value: this.filters[label].value, 
+          sign: value 
+        },
       }
     }
 
@@ -103,8 +107,8 @@ export class TableComponent {
     const headerType = header.type;
     this.headerType = headerType;
     this.isAscending = isAscending;
-    this.isLoading = true;
 
+    this.isLoading = true;
     this.fetchItems.emit({
       filters: this.filters,
       sortOptions: { 
@@ -117,8 +121,8 @@ export class TableComponent {
 
   setPage(currentPage: number) {
     this.currentPage = currentPage;
-    this.isLoading = true;
 
+    this.isLoading = true;
     this.fetchItems.emit({
       filters: this.filters,
       sortOptions: {
