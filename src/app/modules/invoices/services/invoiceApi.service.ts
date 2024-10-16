@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { delay, map, Observable, of } from 'rxjs';
 import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
-import { TableFilters } from 'src/app/core/models/table/table-filters.interface';
 import { TableSorting } from 'src/app/core/models/table/table-sorting.interface';
 
 @Injectable({
