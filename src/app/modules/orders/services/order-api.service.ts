@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { delay, map, Observable, of } from 'rxjs';
 import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
 import { Order } from 'src/app/core/models/order/order.interface';
-import { TableFilters } from 'src/app/core/models/table/table-filters.interface';
+import { TableSorting } from 'src/app/core/models/table/table-sorting.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import { TableFilters } from 'src/app/core/models/table/table-filters.interface'
 export class OrderApiService {
   constructor() { }
 
-  getOrders(filters: any, currentPage: number, sortOptions: any): Observable<{orders: Order[], totalLength: number}> {
+  getOrders(filters: any, currentPage: number, sortOptions: TableSorting): Observable<{orders: Order[], totalLength: number}> {
     const storedOrders = of(localStorage.getItem('orders')).pipe(
       delay(1000),
       map(orders => {
