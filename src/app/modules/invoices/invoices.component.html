@@ -3,6 +3,7 @@
 <app-table
     [headers]="config"
     [items]="invoices"
+    [totalLength]="invoicesLength"
     (fetchItems)="getInvoices($event)"
 >
 </app-table>
