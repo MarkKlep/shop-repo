@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   declarations: [TableComponent, LoaderComponent, PaginationComponent],
   imports: [
     CommonModule,
-    FormsModule 
+    FormsModule
   ],
   exports: [TableComponent]
 })

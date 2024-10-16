@@ -3,6 +3,7 @@ import { TableHeader } from 'src/app/core/models/table/table-header.interface';
 import { HeaderTypes } from 'src/app/core/models/table/header-types.enum';
 import { TableFilters } from 'src/app/core/models/table/table-filters.interface';
 import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -12,7 +13,7 @@ import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
 export class TableComponent {
   constructor() { }
 
-  filters: TableFilters | any = { };
+  filters$ = new BehaviorSubject<{ [key: string]: TableFilters }>({});
 
   HeaderTypes = HeaderTypes;
   FilterSignEnum = FilterSignEnum;
@@ -31,32 +32,37 @@ export class TableComponent {
 
   ngOnInit() {
     for (let header of this.headers) {
-      this.filters[header.label] = [];
-      if (header.type === HeaderTypes.STATUS) {
-        this.filters[header.label] = { 
-          value: '' 
-        };
-      } else if (header.type === HeaderTypes.DATE || header.type === HeaderTypes.NUMBER) {
-        this.filters[header.label] = { 
-          value: '', 
-          sign: FilterSignEnum.EQUALS 
-        };
-      } else if (header.type === HeaderTypes.NAME) {
-        this.filters[header.label] = { 
-          value: '' 
-        };
+      switch (header.type) {
+        case HeaderTypes.STATUS:
+          const prev = this.filters$.value[header.label];
+          this.filters$.next({ ...this.filters$.value, [header.label]: { value: prev?.value || '' } });
+          break;
+        case HeaderTypes.DATE:
+        case HeaderTypes.NUMBER:
+          const prev2 = this.filters$.value[header.label];
+          this.filters$.next({ ...this.filters$.value, [header.label]: { value: prev2?.value || '', sign: prev2?.sign || FilterSignEnum.EQUALS } });
+          break;
+        case HeaderTypes.NAME:
+          const prev3 = this.filters$.value[header.label];
+          this.filters$.next({ ...this.filters$.value, [header.label]: { value: prev3?.value || '' } });
+          break;
+        default:
+          this.filters$.next({ ...this.filters$.value, [header.label]: null });
+          break;
       }
-    }
 
-    this.isLoading = true;
-    this.fetchItems.emit({
-      filters: this.filters,
-      currentPage: this.currentPage,
-      sortOptions: {
-        headerType: this.headerType,
-        isAscending: this.isAscending
-      },
-    });
+      this.filters$.subscribe(filters => {
+        this.isLoading = true;
+        this.fetchItems.emit({
+          filters,
+          currentPage: this.currentPage,
+          sortOptions: {
+            headerType: this.headerType,
+            isAscending: this.isAscending
+          },
+        });
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -74,33 +80,8 @@ export class TableComponent {
     const value = target.value;
     const name = target.name;
 
-    if(name === 'value') {
-      this.filters = {
-        ...this.filters,
-        [label]: { 
-          value, 
-          sign: this.filters[label].sign 
-        },
-      }
-    } else if(name === 'sign') {
-      this.filters = {
-        ...this.filters,
-        [label]: { 
-          value: this.filters[label].value, 
-          sign: value 
-        },
-      }
-    }
-
-    this.isLoading = true;
-    this.fetchItems.emit({
-      filters: this.filters,
-      currentPage: this.currentPage,
-      sortOptions: {
-        headerType: this.headerType,
-        isAscending: this.isAscending
-      },
-    });
+    const prev = this.filters$.value[label];
+    this.filters$.next({ ...this.filters$.value, [label]: { ...prev, [name]: value } });
   }
 
   sortBy(header: TableHeader, isAscending: boolean) {
@@ -110,7 +91,7 @@ export class TableComponent {
 
     this.isLoading = true;
     this.fetchItems.emit({
-      filters: this.filters,
+      filters: this.filters$.value,
       sortOptions: { 
         headerType, 
         isAscending 
@@ -124,7 +105,7 @@ export class TableComponent {
 
     this.isLoading = true;
     this.fetchItems.emit({
-      filters: this.filters,
+      filters: this.filters$.value,
       sortOptions: {
         headerType: this.headerType,
         isAscending: this.isAscending
@@ -134,28 +115,7 @@ export class TableComponent {
   }
 
   resetFilters() {
-    this.filters = { };
-    for (let header of this.headers) {
-      this.filters[header.label] = [];
-      if (header.type === HeaderTypes.STATUS) {
-        this.filters[header.label] = { value: '' };
-      } else if (header.type === HeaderTypes.DATE || header.type === HeaderTypes.NUMBER) {
-        this.filters[header.label] = { value: '', sign: FilterSignEnum.EQUALS };
-      } else if (header.type === HeaderTypes.NAME) {
-        this.filters[header.label] = { value: '' };
-      }
-    }
-
     this.headerType = '';
-
-    this.isLoading = true;
-    this.fetchItems.emit({
-      filters: this.filters,
-      currentPage: this.currentPage,
-      sortOptions: {
-        headerType: this.headerType,
-        isAscending: this.isAscending
-      },
-    });
+    this.filters$.next({});
   }
 }

@@ -11,7 +11,7 @@ import { TableSorting } from 'src/app/core/models/table/table-sorting.interface'
 export class InvoiceApiService {
   constructor() { }
 
-  getInvoices(filters: TableFilters, currentPage: number, sortOptions: TableSorting): Observable<{invoices: Invoice[], totalLength: number}> {
+  getInvoices(filters: any, currentPage: number, sortOptions: TableSorting): Observable<{ invoices: Invoice[], totalLength: number }> {
     const storedInvoices = of(localStorage.getItem('invoices')).pipe(
       delay(1000),
       map(invoices => {
@@ -22,9 +22,8 @@ export class InvoiceApiService {
         }));
       })
     );
-  
-    let totalLength = 0;
 
+    let totalLength = 0;
     const filteredInvoices = storedInvoices.pipe(
       map((invoices) => {
         const filtered = this.filterItems(invoices, filters);
@@ -32,7 +31,7 @@ export class InvoiceApiService {
         return filtered;
       }),
     );
-  
+
     const sortedInvoices = filteredInvoices.pipe(
       map((invoices) => {
         const { headerType, isAscending } = sortOptions;
@@ -40,13 +39,13 @@ export class InvoiceApiService {
         return invoices.sort(this.sortBy(headerType, isAscending));
       }),
     );
-  
+
     const paginatedInvoices = sortedInvoices.pipe(
       map((invoices) => {
         return this.goToPage(invoices, currentPage);
       }),
     );
-  
+
     return paginatedInvoices.pipe(
       map((invoices) => {
         return { invoices, totalLength };
@@ -58,44 +57,44 @@ export class InvoiceApiService {
     let filteredItems = items;
 
     for (const key in filters) {
-        const filter = filters[key];
-        if (filter) {
-            const { value, sign } = filter;
+      const filter = filters[key];
+      if (filter) {
+        const { value, sign } = filter;
 
-            if (key === 'ID' && value) {
-                switch (sign) {
-                    case FilterSignEnum.EQUALS:
-                        filteredItems = filteredItems.filter(item => item.id === value);
-                        break;
-                    case FilterSignEnum.LESS:
-                        filteredItems = filteredItems.filter(item => parseInt(item.id) < parseInt(value));
-                        break;
-                    case FilterSignEnum.MORE:
-                        filteredItems = filteredItems.filter(item => parseInt(item.id) > parseInt(value));
-                        break;
-                }
-            } else if (key === 'Name' && value) {
-                filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(value.toLowerCase()));
-            } else if (key === 'Date' && value) {
-                switch (sign) {
-                    case FilterSignEnum.EQUALS:
-                        filteredItems = filteredItems.filter(item => item.date === value);
-                        break;
-                    case FilterSignEnum.LESS:
-                        filteredItems = filteredItems.filter(item => new Date(item.date) < new Date(value));
-                        break;
-                    case FilterSignEnum.MORE:
-                        filteredItems = filteredItems.filter(item => new Date(item.date) > new Date(value));
-                        break;
-                }
-            } else if (key === 'Status' && value) {
-                filteredItems = filteredItems.filter(item => item.status === value);
-            }
+        if (key === 'ID' && value) {
+          switch (sign) {
+            case FilterSignEnum.EQUALS:
+              filteredItems = filteredItems.filter(item => item.id === value);
+              break;
+            case FilterSignEnum.LESS:
+              filteredItems = filteredItems.filter(item => parseInt(item.id) < parseInt(value));
+              break;
+            case FilterSignEnum.MORE:
+              filteredItems = filteredItems.filter(item => parseInt(item.id) > parseInt(value));
+              break;
+          }
+        } else if (key === 'Name' && value) {
+          filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(value.toLowerCase()));
+        } else if (key === 'Date' && value) {
+          switch (sign) {
+            case FilterSignEnum.EQUALS:
+              filteredItems = filteredItems.filter(item => item.date === value);
+              break;
+            case FilterSignEnum.LESS:
+              filteredItems = filteredItems.filter(item => new Date(item.date) < new Date(value));
+              break;
+            case FilterSignEnum.MORE:
+              filteredItems = filteredItems.filter(item => new Date(item.date) > new Date(value));
+              break;
+          }
+        } else if (key === 'Status' && value) {
+          filteredItems = filteredItems.filter(item => item.status === value);
         }
+      }
     }
 
     return filteredItems;
-}
+  }
 
   private sortBy(headerType: string, isAsccending: boolean) {
     return (a: any, b: any) => {
