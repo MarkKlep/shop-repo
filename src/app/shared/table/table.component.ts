@@ -30,26 +30,45 @@ export class TableComponent {
   headerType = '';
   isAscending = false;
 
-  
+
 
   ngOnInit() {
     for (let header of this.headers) {
       switch (header.type) {
         case HeaderTypes.STATUS:
           const prev = this.filters$.value[header.label];
-          this.filters$.next({ ...this.filters$.value, [header.label]: { value: prev?.value || '' } });
+          this.filters$.next({
+            ...this.filters$.value,
+            [header.label]: {
+              value: prev?.value || ''
+            }
+          });
           break;
         case HeaderTypes.DATE:
         case HeaderTypes.NUMBER:
           const prev2 = this.filters$.value[header.label];
-          this.filters$.next({ ...this.filters$.value, [header.label]: { value: prev2?.value || '', sign: prev2?.sign || FilterSignEnum.EQUALS } });
+          this.filters$.next({
+            ...this.filters$.value,
+            [header.label]: {
+              value: prev2?.value || '',
+              sign: prev2?.sign || FilterSignEnum.EQUALS
+            }
+          });
           break;
         case HeaderTypes.NAME:
           const prev3 = this.filters$.value[header.label];
-          this.filters$.next({ ...this.filters$.value, [header.label]: { value: prev3?.value || '' } });
+          this.filters$.next({
+            ...this.filters$.value,
+            [header.label]: {
+              value: prev3?.value || ''
+            }
+          });
           break;
         default:
-          this.filters$.next({ ...this.filters$.value, [header.label]: null });
+          this.filters$.next({
+            ...this.filters$.value,
+            [header.label]: null
+          });
           break;
       }
 
@@ -68,7 +87,7 @@ export class TableComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if('items' in changes) {
+    if ('items' in changes) {
       this.isLoading = false;
     }
   }
@@ -83,7 +102,10 @@ export class TableComponent {
     const name = target.name;
 
     const prev = this.filters$.value[label];
-    this.filters$.next({ ...this.filters$.value, [label]: { ...prev, [name]: value } });
+    this.filters$.next({
+      ...this.filters$.value,
+      [label]: { ...prev, [name]: value }
+    });
   }
 
   sortBy(header: TableHeader, isAscending: boolean) {
@@ -94,9 +116,9 @@ export class TableComponent {
     this.isLoading = true;
     this.fetchItems.emit({
       filters: this.filters$.value,
-      sortOptions: { 
-        headerType: colName, 
-        isAscending 
+      sortOptions: {
+        headerType: colName,
+        isAscending
       },
       currentPage: this.currentPage,
     });
