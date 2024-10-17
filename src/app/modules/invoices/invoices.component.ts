@@ -3,7 +3,6 @@ import { InvoiceApiService } from './services/invoiceApi.service';
 import { Invoice } from 'src/app/core/models/invoice/invoice.interface';
 import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
 import { HeaderTypes } from 'src/app/core/models/table/header-types.enum';
-import { TableFilters } from 'src/app/core/models/table/table-filters.interface';
 import { TableHeader } from 'src/app/core/models/table/table-header.interface';
 import { InvoiceStatus } from 'src/app/core/models/invoice/invoice-status.enum';
 import { TableSorting } from 'src/app/core/models/table/table-sorting.interface';

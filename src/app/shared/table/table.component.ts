@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { TableHeader } from 'src/app/core/models/table/table-header.interface';
 import { HeaderTypes } from 'src/app/core/models/table/header-types.enum';
-import { TableFilters } from 'src/app/core/models/table/table-filters.interface';
+import { TableFilter } from 'src/app/core/models/table/table-filters.interface';
 import { FilterSignEnum } from 'src/app/core/models/filter/filter-sign.enum';
 import { BehaviorSubject } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { BehaviorSubject } from 'rxjs';
 export class TableComponent {
   constructor() { }
 
-  filters$ = new BehaviorSubject<{ [key: string]: TableFilters }>({});
+  filters$ = new BehaviorSubject<{ [key: string]: TableFilter }>({});
 
   HeaderTypes = HeaderTypes;
   FilterSignEnum = FilterSignEnum;
