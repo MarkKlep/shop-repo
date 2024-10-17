@@ -20,7 +20,6 @@
                   class="form-control" 
                   [placeholder]="header.field + '...'" 
                   name="value"
-                  [value]="filters$.getValue()[header.label]?.value"
                   (keyup)="filterItems(header.label, $event)">
               </div>
               <div>
