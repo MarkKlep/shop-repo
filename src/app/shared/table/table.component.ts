@@ -20,8 +20,6 @@ export class TableComponent {
 
   @Input() headers: any[] = [];
   @Input() data: any = {};
-  // @Input() items: any[] = [];
-  // @Input() totalLength = 0;
 
   items: any[] = [];
   totalLength = 0;
