@@ -30,9 +30,29 @@ export class TableComponent {
   headerType = '';
   isAscending = false;
 
-
-
   ngOnInit() {
+    this.initTableFilters();
+
+    this.filters$.subscribe(filters => {
+      this.isLoading = true;
+      this.fetchItems.emit({
+        filters,
+        currentPage: this.currentPage,
+        sortOptions: {
+          headerType: this.headerType,
+          isAscending: this.isAscending
+        },
+      });
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if ('items' in changes) {
+      this.isLoading = false;
+    }
+  }
+
+  initTableFilters() {
     for (let header of this.headers) {
       switch (header.type) {
         case HeaderTypes.STATUS:
@@ -71,24 +91,6 @@ export class TableComponent {
           });
           break;
       }
-
-      this.filters$.subscribe(filters => {
-        this.isLoading = true;
-        this.fetchItems.emit({
-          filters,
-          currentPage: this.currentPage,
-          sortOptions: {
-            headerType: this.headerType,
-            isAscending: this.isAscending
-          },
-        });
-      });
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if ('items' in changes) {
-      this.isLoading = false;
     }
   }
 
