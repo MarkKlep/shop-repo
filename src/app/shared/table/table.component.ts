@@ -106,7 +106,10 @@ export class TableComponent {
     const prev = this.filters$.value[label];
     this.filters$.next({
       ...this.filters$.value,
-      [label]: { ...prev, [name]: value }
+      [label]: { 
+        ...prev,
+        [name]: value 
+      }
     });
   }
 
