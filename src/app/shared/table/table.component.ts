@@ -109,15 +109,14 @@ export class TableComponent {
   }
 
   sortBy(header: TableHeader, isAscending: boolean) {
-    const colName = header.field;
-    this.headerType = colName;
+    this.headerType = header.field;
     this.isAscending = isAscending;
 
     this.isLoading = true;
     this.fetchItems.emit({
       filters: this.filters$.value,
       sortOptions: {
-        headerType: colName,
+        headerType: this.headerType,
         isAscending
       },
       currentPage: this.currentPage,
