@@ -10,7 +10,7 @@ import { TableSorting } from 'src/app/core/models/table/table-sorting.interface'
 export class OrderApiService {
   constructor() { }
 
-  getOrders(filters: any, currentPage: number, sortOptions: TableSorting): Observable<{orders: Order[], totalLength: number}> {
+  getOrders(filters: any, currentPage: number, sortOptions: TableSorting): Observable<{ items: Order[], totalLength: number }> {
     const storedOrders = of(localStorage.getItem('orders')).pipe(
       delay(1000),
       map(orders => {
@@ -45,7 +45,10 @@ export class OrderApiService {
 
     return paginatedOrders.pipe(
       map((orders) => {
-        return { orders, totalLength };
+        return { 
+          items: orders, 
+          totalLength 
+        };
       }),
     );
   }

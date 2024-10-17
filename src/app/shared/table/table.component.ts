@@ -19,8 +19,12 @@ export class TableComponent {
   FilterSignEnum = FilterSignEnum;
 
   @Input() headers: any[] = [];
-  @Input() items: any[] = [];
-  @Input() totalLength = 0;
+  @Input() data: any = {};
+  // @Input() items: any[] = [];
+  // @Input() totalLength = 0;
+
+  items: any[] = [];
+  totalLength = 0;
 
   @Output() fetchItems = new EventEmitter<any>();
 
@@ -47,7 +51,10 @@ export class TableComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if ('items' in changes) {
+    if ('data' in changes) {
+      this.items = this.data.items;
+      this.totalLength = this.data.totalLength;
+
       this.isLoading = false;
     }
   }

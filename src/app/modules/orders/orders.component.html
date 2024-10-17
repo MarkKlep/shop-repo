@@ -2,8 +2,7 @@
 
 <app-table
     [headers]="config"
-    [items]="orders"
-    [totalLength]="ordersLength"
+    [data]="orderData"
     (fetchItems)="getOrders($event)"
 >
 </app-table>

@@ -4,7 +4,10 @@
       <tr>
         <th colspan="headers.length">
           <div class="reset-btn">
-            <button (click)="resetFilters()" class="btn btn-danger">
+            <button 
+              class="btn btn-danger"
+              (click)="resetFilters()"
+            >
               Clear all filters
             </button>
           </div>
@@ -94,10 +97,18 @@
           <div class="d-flex justify-content-between align-items-end" style="height: 100%;">
             <p class="mb-0">{{ header.label }}</p>
             <div>
-              <button *ngIf=" header.label !== 'Image'" class="btn btn-link" (click)="sortBy(header, true)">
+              <button 
+                *ngIf=" header.label !== 'Image'" 
+                class="btn btn-link" 
+                (click)="sortBy(header, true)"
+              >
                 &#8593;
               </button>
-              <button *ngIf=" header.label !== 'Image'" class="btn btn-link" (click)="sortBy(header, false)">
+              <button 
+                *ngIf=" header.label !== 'Image'" 
+                class="btn btn-link" 
+                (click)="sortBy(header, false)"
+              >
                 &#8595;
               </button>
             </div>
@@ -108,7 +119,7 @@
     <tbody>
       <tr *ngFor="let item of items">
         <td *ngFor="let header of headers">
-          {{getValue(item, header.field) }}
+          {{ getValue(item, header.field) }}
         </td>
       </tr>
     </tbody>

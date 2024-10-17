@@ -56,14 +56,18 @@ export class OrdersComponent {
   orders: Order[] = [];
   ordersLength = 0;
 
+  orderData: { items: Order[], totalLength: number } = {
+    items: [],
+    totalLength: 0
+  }
+
   getOrders(requestOptions: any) {
     const filters = requestOptions.filters;
     const sortOptions = requestOptions.sortOptions;
     const currentPage = requestOptions.currentPage;
 
     this.orderApi.getOrders(filters, currentPage, sortOptions).subscribe((dbData) => {
-      this.orders = dbData.orders;
-      this.ordersLength = dbData.totalLength;
+      this.orderData = dbData;
     });
   }
 }

@@ -10,7 +10,7 @@ import { TableSorting } from 'src/app/core/models/table/table-sorting.interface'
 export class InvoiceApiService {
   constructor() { }
 
-  getInvoices(filters: any, currentPage: number, sortOptions: TableSorting): Observable<{ invoices: Invoice[], totalLength: number }> {
+  getInvoices(filters: any, currentPage: number, sortOptions: TableSorting): Observable<{ items: Invoice[], totalLength: number }> {
     const storedInvoices = of(localStorage.getItem('invoices')).pipe(
       delay(1000),
       map(invoices => {
@@ -47,7 +47,10 @@ export class InvoiceApiService {
 
     return paginatedInvoices.pipe(
       map((invoices) => {
-        return { invoices, totalLength };
+        return { 
+          items: invoices, 
+          totalLength 
+        };
       }),
     );
   }

@@ -62,14 +62,18 @@ export class InvoicesComponent {
   invoices: Invoice[] = [];
   invoicesLength = 0;
 
+  invoiceData: { items: Invoice[], totalLength: number } = {
+    items: [],
+    totalLength: 0
+  }
+
   getInvoices(requestOptions: any) {
     const filters = requestOptions.filters as any;
     const sortOptions = requestOptions.sortOptions as TableSorting;
     const currentPage = requestOptions.currentPage as number;
 
     this.invoiceApi.getInvoices(filters, currentPage, sortOptions).subscribe((dbData) => {
-      this.invoices = dbData.invoices;
-      this.invoicesLength = dbData.totalLength;
+      this.invoiceData = dbData;
     });
   }
 }
